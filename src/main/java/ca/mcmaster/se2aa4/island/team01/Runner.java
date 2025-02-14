@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.island.team01;
+package ca.mcmaster.se2aa4.island.team0;
 
 import static eu.ace_design.island.runner.Runner.run;
 
