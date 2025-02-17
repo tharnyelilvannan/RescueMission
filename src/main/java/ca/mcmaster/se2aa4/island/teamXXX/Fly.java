@@ -1,7 +1,7 @@
 package main.java.ca.mcmaster.se2aa4.island.teamXXX;
 
-class Fly {
-    public void flyForward(Direction direction, LocationCoordinates currentLocation) {
+public class Fly {
+    public int flyForward(Direction direction, LocationCoordinates currentLocation) {
         if (direction == Direction.NORTH) {
             // update coordinates, depends on implementation of currentLocation
         }
@@ -14,5 +14,7 @@ class Fly {
         else if (direction == Direction.EAST) {
             // update coordinates, depends on implementation of currentLocation
         }
+
+        return 0;
     }
 }
