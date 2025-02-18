@@ -21,11 +21,20 @@ public class Explorer implements IExplorerRaid {
         Integer batteryLevel = info.getInt("budget");
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
+
+        Integer x = info.getInt("x"); 
+        Integer y = info.getInt("y"); 
+        
+
+
     }
 
     @Override
     public String takeDecision() {
         JSONObject decision = new JSONObject();
+
+
+
         decision.put("action", "stop"); // we stop the exploration immediately
         logger.info("** Decision: {}",decision.toString());
         return decision.toString();
