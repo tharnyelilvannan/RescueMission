@@ -11,11 +11,13 @@ import org.json.JSONTokener;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-    private GroundDetector groundDetector;
+    // private GroundDetector groundDetector;
+
     // private String nextAction; 
     // private String currentAction; 
-    private Direction currDirection; 
     
+    
+    MakeDecision decision; 
 
     @Override
     public void initialize(String s) {
@@ -28,7 +30,8 @@ public class Explorer implements IExplorerRaid {
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
 
-        groundDetector = new GroundDetector(Direction.EAST);
+        decision = new MakeDecision();
+        
         //currentAction = "echo"; 
         
     }
@@ -37,16 +40,7 @@ public class Explorer implements IExplorerRaid {
     public String takeDecision() {
         logger.info("** Taking a decision"); 
 
-        if (groundDetector.mustDroneTurn()){
-            return groundDetector.changeHeading(); 
-        }
-        // if ground not found
-        else if (!groundDetector.isGroundFound()) {      // Check for ground
-            return groundDetector.checkGround();
-        } 
-        else { // if ground found
-            return "{\"action\":\"stop\"}"; 
-        }
+        return decision.makeDecision(); 
     }
 
     @Override
@@ -60,7 +54,7 @@ public class Explorer implements IExplorerRaid {
         JSONObject extraInfo = response.getJSONObject("extras");
         logger.info("Additional information received: {}", extraInfo);
 
-        currDirection = groundDetector.processResponse(extraInfo);
+        decision.sendResponse(extraInfo);
     }
 
     @Override
