@@ -32,8 +32,6 @@ public class Explorer implements IExplorerRaid {
 
         decision = new MakeDecision();
         
-        //currentAction = "echo"; 
-        
     }
 
     @Override

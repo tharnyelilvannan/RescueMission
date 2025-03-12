@@ -69,6 +69,14 @@ public class GroundDetector {
         logger.info("Fly request:" + request.toString()); 
         return request.toString();
     }
+    public String scan(){
+        JSONObject request = new JSONObject();
+        request.put("action", "scan"); // do scan action
+
+        logger.info("Scan request:" + request.toString()); 
+        return request.toString();
+    }
+
 
 
 
@@ -167,6 +175,9 @@ public class GroundDetector {
         }
     }
 
+    public void turnRight(){
+        currentDirection = currentDirection.turnRight(); 
+    }
 
     public Direction getCurrentDirection() {
         return currentDirection;
