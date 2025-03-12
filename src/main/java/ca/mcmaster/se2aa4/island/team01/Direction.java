@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/main/java/ca/mcmaster/se2aa4/island/teamXXX/Direction.java
 package ca.mcmaster.se2aa4.island.teamXXX;
 
 public enum Direction {
@@ -33,3 +34,10 @@ public enum Direction {
         return val;  // ✅ Return short-form (N, E, S, W) instead of full name
     }
 }
+=======
+package main.java.ca.mcmaster.se2aa4.island.team01;
+
+enum Direction {
+    NORTH, WEST, SOUTH, EAST;
+};
+>>>>>>> main:src/main/java/ca/mcmaster/se2aa4/island/team01/Direction.java

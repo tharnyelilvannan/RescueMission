@@ -1,5 +1,7 @@
-package ca.mcmaster.se2aa4.island.teamXXX;
 // to run: mvn exec:java -q -Dexec.args="./maps/map03.json"
+package ca.mcmaster.se2aa4.island.team01;
+
+main:src/main/java/ca/mcmaster/se2aa4/island/team01/Explorer.java
 import java.io.StringReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
