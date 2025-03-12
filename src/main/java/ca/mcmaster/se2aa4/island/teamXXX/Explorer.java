@@ -1,5 +1,5 @@
 package ca.mcmaster.se2aa4.island.teamXXX;
-
+// to run: mvn exec:java -q -Dexec.args="./maps/map03.json"
 import java.io.StringReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,53 +11,60 @@ import org.json.JSONTokener;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-
-    private Drone drone;
+    private GroundDetector groundDetector;
+    // private String nextAction; 
+    // private String currentAction; 
+    private Direction currDirection; 
+    
 
     @Override
     public void initialize(String s) {
         logger.info("** Initializing the Exploration Command Center");
         JSONObject info = new JSONObject(new JSONTokener(new StringReader(s)));
-        logger.info("** Initialization info:\n {}",info.toString(2));
+        logger.info("** Initialization info:\n {}", info.toString(2));
 
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
-        int x = info.getInt("x"); 
-        int y = info.getInt("y"); 
-
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
 
-        drone = new Drone(Direction.EAST, batteryLevel, x, y);
+        groundDetector = new GroundDetector(Direction.EAST);
+        //currentAction = "echo"; 
+        
     }
 
     @Override
     public String takeDecision() {
-        JSONObject decision = new JSONObject();
+        logger.info("** Taking a decision"); 
 
-       
-
-        decision.put("action", "move");
-        decision.put("action", "stop"); // we stop the exploration immediately
-        logger.info("** Decision: {}",decision.toString());
-        return decision.toString();
+        if (groundDetector.mustDroneTurn()){
+            return groundDetector.changeHeading(); 
+        }
+        // if ground not found
+        else if (!groundDetector.isGroundFound()) {      // Check for ground
+            return groundDetector.checkGround();
+        } 
+        else { // if ground found
+            return "{\"action\":\"stop\"}"; 
+        }
     }
 
     @Override
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
-        logger.info("** Response received:\n"+response.toString(2));
+        logger.info("** Response received:\n" + response.toString(2));
         Integer cost = response.getInt("cost");
         logger.info("The cost of the action was {}", cost);
         String status = response.getString("status");
         logger.info("The status of the drone is {}", status);
         JSONObject extraInfo = response.getJSONObject("extras");
         logger.info("Additional information received: {}", extraInfo);
+
+        currDirection = groundDetector.processResponse(extraInfo);
     }
 
     @Override
     public String deliverFinalReport() {
-        return "no creek found";
+        return "Exploration complete.";
     }
-
 }
