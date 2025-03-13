@@ -22,6 +22,6 @@ jobs:
           cache: 'maven'
       - name: Create project jar with Maven
         run: mvn --batch-mode clean package -DskipTests
-      - name: running tests
+      - name: Running Tests
         run: mvn --batch-mode test
 
