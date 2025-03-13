@@ -1,6 +1,4 @@
-import src/main/java/ca/mcmaster/se2aa4/island/team01/LocationCoordinates.java
 package ca.mcmaster.se2aa4.island.team01;
-
 
 public class LocationCoordinates {
 
@@ -34,8 +32,5 @@ public class LocationCoordinates {
     public String getCurrentCoordinates(){
         return currentCoordinates; 
     }
-
-
-
-
+    
 }

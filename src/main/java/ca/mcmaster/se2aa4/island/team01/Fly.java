@@ -2,6 +2,7 @@ package ca.mcmaster.se2aa4.island.team01;
 
 
 public class Fly {
+    
     Direction direction; 
 
     public String flyRight(Direction dir, LocationCoordinates currentCoordinates){ // { "action": "heading", "parameters": { "direction": "N" } }
