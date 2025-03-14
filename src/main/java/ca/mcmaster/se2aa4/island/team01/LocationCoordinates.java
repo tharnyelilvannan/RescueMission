@@ -2,9 +2,9 @@ package ca.mcmaster.se2aa4.island.team01;
 
 public class LocationCoordinates {
 
-    private String currentCoordinates;
-    private int xCoordinate; 
-    private int yCoordinate; 
+    protected String currentCoordinates;
+    protected int xCoordinate; 
+    protected int yCoordinate; 
 
     public LocationCoordinates(String coordinates){
         this.currentCoordinates = coordinates;
