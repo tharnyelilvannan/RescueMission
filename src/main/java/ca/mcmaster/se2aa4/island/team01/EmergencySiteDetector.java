@@ -25,14 +25,14 @@ public class EmergencySiteDetector extends GroundDetector {
         return request.toString();
     }
 
-    private void processScan(JSONObject request) {
+    private boolean processScan(JSONObject request) {
         String scan = request.optString("sites", "UNKNOWN");
 
         if (scan.isEmpty()) {
-            // not emergency site
+            return false;
         }
         else {
-            // this is emergency sites
+            return true;
         }
     }
 
