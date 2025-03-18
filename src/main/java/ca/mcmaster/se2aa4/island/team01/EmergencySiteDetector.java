@@ -9,13 +9,14 @@ import netscape.javascript.JSObject;
 public class EmergencySiteDetector extends GroundDetector {
 
     private final Logger logger = LogManager.getLogger();
+    public boolean ESFound = false;
 
     public EmergencySiteDetector(Direction direction) {
 
         super(direction); 
 
     }
-
+/*
     public String scan() {
         JSONObject request = new JSONObject();
         request.put("action", "scan"); // do scan action
@@ -24,16 +25,17 @@ public class EmergencySiteDetector extends GroundDetector {
         processScan(request);
         return request.toString();
     }
-
-    private boolean processScan(JSONObject request) {
+*/
+    public boolean processScan(JSONObject request) {
         String scan = request.optString("sites", "UNKNOWN");
 
-        if (scan.isEmpty()) {
-            return false;
+        if !(scan.isEmpty()) {
+            ESFound = true;
         }
-        else {
-            return true;
-        }
+    }
+
+    public boolean isESFound() {
+        return ESFound;
     }
 
 }

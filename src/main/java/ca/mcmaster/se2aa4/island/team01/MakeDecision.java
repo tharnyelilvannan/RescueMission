@@ -8,23 +8,25 @@ public class MakeDecision {
 
     private final Logger logger = LogManager.getLogger();
     GroundDetector groundDetector;
+    EmergencySiteDetector ESDetector;
     Direction currDirection = Direction.EAST;
 
-    
-    
     int count;
     private boolean flyForward;
-    private boolean initialSearch;
+    private boolean initialSearch; // for flying phase
     private boolean flyPhase;
     private boolean landingPhase;
+    private boolean searchPhase;
 
     public MakeDecision() {
         groundDetector = new GroundDetector(currDirection);
+        ESDetector = new EmergencySiteDetector(currDirection);
         count = 0;
         flyForward = false;
         initialSearch = true;
         flyPhase = true;
         landingPhase = false;
+        searchPhase = false;
     }
 
     public String makeDecision() {
@@ -116,13 +118,24 @@ public class MakeDecision {
             // Ground is reached
             else {
                 flyPhase = false;
-                landingPhase = true;
+                searchPhase = true;
                 return groundDetector.scan();
             }
         }
 
+        if (searchPhase == true) {
+            logger.info("In search phase");
+            
+            if (ESDetector.isESFound()) {
+                searchPhase = false;
+                landingPhase = true;
+            }
+            return groundDetector.scan();            
+
+        }
+
         if (landingPhase == true) {
-            logger.info("in landing phase");
+            logger.info("In landing phase");
 
             return groundDetector.returnToHeadquarters();
         } 
@@ -133,6 +146,9 @@ public class MakeDecision {
     }
 
     public void sendResponse(JSONObject extraInfo) {
+        if (searchPhase == true) {
+            ESDetector.processScan(extraInfo);
+        }
         groundDetector.processResponse(extraInfo);
     }
 
