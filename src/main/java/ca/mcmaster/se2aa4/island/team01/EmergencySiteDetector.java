@@ -26,11 +26,13 @@ public class EmergencySiteDetector extends GroundDetector {
         return request.toString();
     }
 */
-    public boolean processScan(JSONObject request) {
+    public void processScan(JSONObject request) {
         String scan = request.optString("sites", "UNKNOWN");
 
-        if !(scan.isEmpty()) {
+        if (!scan.equals("[]")) {
             ESFound = true;
+            logger.info(scan);
+            logger.info("Hellooooooooooooooooooooooooooooooooooo");
         }
     }
 

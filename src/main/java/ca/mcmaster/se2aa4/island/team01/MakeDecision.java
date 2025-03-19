@@ -17,6 +17,7 @@ public class MakeDecision {
     private boolean flyPhase;
     private boolean landingPhase;
     private boolean searchPhase;
+    private boolean scan;
 
     public MakeDecision() {
         groundDetector = new GroundDetector(currDirection);
@@ -27,6 +28,7 @@ public class MakeDecision {
         flyPhase = true;
         landingPhase = false;
         searchPhase = false;
+        scan = false;
     }
 
     public String makeDecision() {
@@ -119,7 +121,8 @@ public class MakeDecision {
             else {
                 flyPhase = false;
                 searchPhase = true;
-                return groundDetector.scan();
+                // scan = true;
+                return groundDetector.echoStraight();
             }
         }
 
@@ -129,9 +132,18 @@ public class MakeDecision {
             if (ESDetector.isESFound()) {
                 searchPhase = false;
                 landingPhase = true;
+                System.out.println("######################################################################################################");
+                return ESDetector.fly();
             }
-            return groundDetector.scan();            
-
+            else if (flyForward == true) {
+                flyForward = false;
+                return ESDetector.fly();
+            }
+            else {
+                flyForward = true;
+                scan = true;
+                return ESDetector.scan();            
+            }
         }
 
         if (landingPhase == true) {
@@ -146,7 +158,8 @@ public class MakeDecision {
     }
 
     public void sendResponse(JSONObject extraInfo) {
-        if (searchPhase == true) {
+        if (scan == true) {
+            scan = false;
             ESDetector.processScan(extraInfo);
         }
         groundDetector.processResponse(extraInfo);
