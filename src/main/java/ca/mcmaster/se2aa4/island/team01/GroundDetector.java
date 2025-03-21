@@ -15,9 +15,14 @@ public class GroundDetector {
     }
 
     public void updateInfo(ExtraInfo info) {
+        if (info == null) {
+            logger.error("Received null ExtraInfo in GroundDetector. Skipping update.");
+            return;
+        }
         this.information = info;
         detectGround();
     }
+    
    
     protected boolean detectGround() {
         JSONObject extras = information.getExtras();

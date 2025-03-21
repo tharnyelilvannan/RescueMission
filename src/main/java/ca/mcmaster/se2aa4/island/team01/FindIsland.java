@@ -50,7 +50,9 @@ public class FindIsland {
     }
 
     public void updateGroundDetector(ExtraInfo info) {
-        groundDetector.updateInfo(info);
+        if (info != null) {
+            groundDetector.updateInfo(info);
+        }
     }
 
     public String searchForGround() {
@@ -89,13 +91,14 @@ public class FindIsland {
                 return scan.scanArea();
             }
         }
+        return fly.flyOneUnit();
+    }
 
-        if (landingPhase == true) {
-            logger.info("in landing phase");
+    public boolean isLandingPhase() {
+        return landingPhase;
+    }
 
-            return stop.returnToHeadquarters();
-        } else {
-            return stop.returnToHeadquarters();
-        }
+    public Direction getCurrentDirection() {
+        return currentDirection;
     }
 }

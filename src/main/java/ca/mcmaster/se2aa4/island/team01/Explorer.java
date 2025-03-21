@@ -43,16 +43,18 @@ public class Explorer implements IExplorerRaid {
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
         ExtraInfo information = getResponse.translate(response);
+
+        if (information == null) {
+            logger.error("Received null ExtraInfo in acknowledgeResults. Skipping update.");
+            return;
+        }
         Integer cost = information.getCost();
         logger.info("The cost of the action was {}", cost);
         String status = information.getStatus();
         logger.info("The status of the drone is {}", status);
         JSONObject extraInfo = information.getExtras();
         logger.info("Additional information received: {}", extraInfo);
-        findIsland.updateGroundDetector(information);
         drone.updateInfo(information);
-        // creekFinder.updateInfo(information);
-
 
     }
 
