@@ -16,6 +16,7 @@ public class Explorer implements IExplorerRaid {
 
     // private String nextAction; 
     // private String currentAction; 
+    private int battery;
     
     
     MakeDecision decision; 
@@ -29,6 +30,7 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
         logger.info("The drone is facing {}", direction);
+        battery = batteryLevel;
         logger.info("Battery level is {}", batteryLevel);
 
         decision = new MakeDecision();
@@ -51,6 +53,8 @@ public class Explorer implements IExplorerRaid {
         String status = response.getString("status");
         logger.info("The status of the drone is {}", status);
         JSONObject extraInfo = response.getJSONObject("extras");
+        battery = battery - cost;
+        logger.info("The battery level is {}", battery);
         logger.info("Additional information received: {}", extraInfo);
 
         decision.sendResponse(extraInfo);

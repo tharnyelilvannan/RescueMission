@@ -18,6 +18,7 @@ public class MakeDecision {
     private boolean landingPhase;
     private boolean searchPhase;
     private boolean scan;
+    private boolean firstSearchPhase = true;
 
     public MakeDecision() {
         groundDetector = new GroundDetector(currDirection);
@@ -122,26 +123,38 @@ public class MakeDecision {
                 flyPhase = false;
                 searchPhase = true;
                 // scan = true;
-                return groundDetector.echoStraight();
+                currDirection = currDirection.turnLeft();
+                currDirection = currDirection.turnLeft();
+                currDirection = currDirection.turnLeft();
+                return groundDetector.changeHeading(currDirection);
             }
         }
 
         if (searchPhase == true) {
             logger.info("In search phase");
-            
+            logger.info(currDirection);
+        /*
+            if (firstSearchPhase == true) {
+                currDirection = currDirection.turnLeft();
+                firstSearchPhase = false;
+                return groundDetector.changeHeading(currDirection);
+            }
+        */
             if (ESDetector.isESFound()) {
                 searchPhase = false;
                 landingPhase = true;
                 System.out.println("######################################################################################################");
-                return ESDetector.fly();
+                return ESDetector.returnToHeadquarters();
             }
             else if (flyForward == true) {
                 flyForward = false;
+                logger.info("Hello");
                 return ESDetector.fly();
             }
             else {
                 flyForward = true;
                 scan = true;
+                logger.info("HI");
                 return ESDetector.scan();            
             }
         }

@@ -28,6 +28,7 @@ public class EmergencySiteDetector extends GroundDetector {
 */
     public void processScan(JSONObject request) {
         String scan = request.optString("sites", "UNKNOWN");
+        System.out.print(scan);
 
         if (!scan.equals("[]")) {
             ESFound = true;
