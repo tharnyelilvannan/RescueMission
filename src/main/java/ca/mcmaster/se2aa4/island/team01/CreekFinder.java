@@ -51,7 +51,7 @@ public class CreekFinder {
             logger.info(extras);
             if (extras == null) {
                 logger.error("searchForCreek(): information.getExtras() is null");
-                return fly.flyOneUnit();
+                return null;
             }
             if (extras.has("creeks")) {
                 JSONArray creeks = extras.getJSONArray("creeks");
@@ -59,18 +59,18 @@ public class CreekFinder {
     
                 if (creeks.length() < 1) {   // No creeks found
                     logger.info("searchForCreek(): No creeks found in scan");
-                    return fly.flyOneUnit();
+                    return null;
                 } else {
                     creekId = creeks.getString(0);
                     creekFound = true;
                     logger.info("searchForCreek(): Creek found with ID " + creekId);
-                    return fly.flyOneUnit();
+                    return null;
                 }
             } else {
                 logger.info("searchForCreek(): 'creeks' key not found in extras");
             }
         }
-        return fly.flyOneUnit(); // Continue normal operations if no creek is found
+        return null; // Continue normal operations if no creek is found
     }
     
 

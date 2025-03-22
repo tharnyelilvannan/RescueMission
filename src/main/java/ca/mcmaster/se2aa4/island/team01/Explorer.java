@@ -45,7 +45,6 @@ public class Explorer implements IExplorerRaid {
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
         ExtraInfo information = getResponse.translate(response);
-
         if (information == null) {
             logger.error("Received null ExtraInfo in acknowledgeResults. Skipping update.");
             return;
