@@ -43,17 +43,6 @@ public class Explorer implements IExplorerRaid {
     @Override
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
-<<<<<<< HEAD
-        logger.info("** Response received:\n" + response.toString(2));
-        Integer cost = response.getInt("cost");
-        logger.info("The cost of the action was {}", cost);
-        String status = response.getString("status");
-        logger.info("The status of the drone is {}", status);
-        JSONObject extraInfo = response.getJSONObject("extras");
-        battery = battery - cost;
-        logger.info("The battery level is {}", battery);
-        logger.info("Additional information received: {}", extraInfo);
-=======
         ExtraInfo information = getResponse.translate(response);
 
         if (information == null) {
@@ -67,7 +56,6 @@ public class Explorer implements IExplorerRaid {
         JSONObject extraInfo = information.getExtras();
         logger.info("Additional information received: {}", extraInfo);
         drone.updateInfo(information);
->>>>>>> main
 
     }
 

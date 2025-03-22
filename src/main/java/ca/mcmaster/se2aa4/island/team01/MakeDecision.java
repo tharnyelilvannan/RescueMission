@@ -19,6 +19,7 @@ public class MakeDecision {
     private boolean searchPhase;
     private boolean scan;
     private boolean firstSearchPhase = true;
+    
 
     public MakeDecision() {
         groundDetector = new GroundDetector(currDirection);
@@ -143,7 +144,6 @@ public class MakeDecision {
             if (ESDetector.isESFound()) {
                 searchPhase = false;
                 landingPhase = true;
-                System.out.println("######################################################################################################");
                 return ESDetector.returnToHeadquarters();
             }
             else if (flyForward == true) {
