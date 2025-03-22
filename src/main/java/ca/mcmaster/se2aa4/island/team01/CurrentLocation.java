@@ -5,7 +5,7 @@ public class CurrentLocation extends Location {
     private static CurrentLocation instance = null; 
 
     private CurrentLocation() {
-        super(0, 0);
+        super(1, 1);
     }
 
     public static CurrentLocation get() {
