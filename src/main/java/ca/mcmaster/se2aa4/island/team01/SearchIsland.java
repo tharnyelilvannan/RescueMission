@@ -10,6 +10,7 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
+import ca.mcmaster.se2aa4.island.team01.CreekList;
 
 public class SearchIsland {
     private final Logger logger = LogManager.getLogger();
@@ -116,6 +117,8 @@ public class SearchIsland {
         scanningForCreek = false;
         JSONObject extras = information.getExtras();
         logger.info(extras);
+        CreekList creekList = CreekList.get();
+        CurrentLocation current = CurrentLocation.get();
 
         if (!extras.has("creeks")) {
             logger.info("No creeks found.");
@@ -124,6 +127,7 @@ public class SearchIsland {
 
         JSONArray creeks = extras.getJSONArray("creeks");
         if (creeks.length() > 0) {
+            creekList.addCreek(creeks.getString(0), current);
             logger.info("Creek found! ID: " + creeks.getString(0));
             return stop.returnToHeadquarters();
         }
