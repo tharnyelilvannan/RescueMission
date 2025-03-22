@@ -18,6 +18,7 @@ public class Explorer implements IExplorerRaid {
     // CreekFinder creekFinder;
     GetResponse getResponse = new GetResponse();
     Drone drone = new Drone();
+    private int battery;
 
     @Override
     public void initialize(String s) {
@@ -28,6 +29,7 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
         logger.info("The drone is facing {}", direction);
+        battery = batteryLevel;
         logger.info("Battery level is {}", batteryLevel);
         findIsland = new FindIsland();
         
@@ -43,13 +45,14 @@ public class Explorer implements IExplorerRaid {
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
         ExtraInfo information = getResponse.translate(response);
-
         if (information == null) {
             logger.error("Received null ExtraInfo in acknowledgeResults. Skipping update.");
             return;
         }
         Integer cost = information.getCost();
         logger.info("The cost of the action was {}", cost);
+        battery = battery - cost;
+        logger.info("The battery remaining is {}", battery);
         String status = information.getStatus();
         logger.info("The status of the drone is {}", status);
         JSONObject extraInfo = information.getExtras();

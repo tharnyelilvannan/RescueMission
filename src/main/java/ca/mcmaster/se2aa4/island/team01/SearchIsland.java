@@ -75,6 +75,7 @@ public class SearchIsland {
         return scan.scanArea();
     }
 
+    // refactor later; probably
     private String handleStateTransition() {
         switch (state) {
             case MOVE_EAST:
@@ -114,6 +115,7 @@ public class SearchIsland {
     private String processScanResults() {
         scanningForCreek = false;
         JSONObject extras = information.getExtras();
+        logger.info(extras);
 
         if (!extras.has("creeks")) {
             logger.info("No creeks found.");

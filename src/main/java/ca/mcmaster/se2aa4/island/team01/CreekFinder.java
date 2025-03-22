@@ -5,16 +5,23 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
+import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
+import ca.mcmaster.se2aa4.island.team01.Actions.Echo;
 
-public class CreekFinder extends Terrain {
+public class CreekFinder {
     private final Logger logger = LogManager.getLogger();
     private boolean creekFound = false;
     private String creekId = null;
     private final Scan scan;
     private boolean hasScanned = false;
+    public ExtraInfo information;
+    private final Fly fly;
+    private final Echo echo;
 
     public CreekFinder() {
         scan = new Scan();
+        fly = new Fly();
+        echo = new Echo();
     }
 
     public void updateInfo(ExtraInfo info) {
@@ -27,6 +34,8 @@ public class CreekFinder extends Terrain {
     }
     
     public String searchForCreek() {
+        logger.info(hasScanned);
+
         if (information == null) {
             logger.error("searchForCreek(): information is null");
             return null;
