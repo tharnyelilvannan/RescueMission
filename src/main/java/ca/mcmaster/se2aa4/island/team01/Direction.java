@@ -5,7 +5,7 @@ public enum Direction {
 
     private final String val;
     private Direction left; 
-    private Direction right; 
+    private Direction right;
 
     static {
         NORTH.left = WEST;
