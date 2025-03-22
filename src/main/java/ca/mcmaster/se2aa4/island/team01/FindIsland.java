@@ -1,12 +1,7 @@
 package ca.mcmaster.se2aa4.island.team01;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ca.mcmaster.se2aa4.island.team01.Actions.Echo;
-import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
-import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
-import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
-import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
+import ca.mcmaster.se2aa4.island.team01.Actions.*;
 
 /* *****************************************************************************
          * Strategy

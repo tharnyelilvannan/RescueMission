@@ -2,26 +2,23 @@ package ca.mcmaster.se2aa4.island.team01;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ca.mcmaster.se2aa4.island.team01.Actions.Echo;
 import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
-import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
 
 public class SearchIsland {
     private final Logger logger = LogManager.getLogger();
     private ExtraInfo information;
-    private Fly fly;
-    private Heading heading;
-    private Echo echo;
-    private Scan scan;
-    private Stop stop;
+    private final Fly fly;
+    private final Heading heading;
+    private final Echo echo;
+    private final Stop stop;
+    private final CreekFinder creekFinder;
     private Direction currentDirection;
     private boolean echoedForward = false;
-    private boolean scanningForCreek = false;
 
     private enum State {
         MOVE_EAST, TURN_SOUTH_FROM_EAST, MOVE_SOUTH_FROM_EAST,
@@ -35,8 +32,8 @@ public class SearchIsland {
         this.fly = new Fly();
         this.heading = new Heading();
         this.echo = new Echo();
-        this.scan = new Scan();
         this.stop = new Stop();
+        this.creekFinder = new CreekFinder();
         this.currentDirection = Direction.EAST;
     }
 
@@ -46,12 +43,13 @@ public class SearchIsland {
             return;
         }
         this.information = info;
+        creekFinder.updateInfo(info);
     }
 
     public String exploreIsland() {
         logger.info("** Searching the island **");
 
-        if (scanningForCreek) return processScanResults();
+        if (creekFinder.isScanning()) return creekFinder.findCreeks();
 
         if (!echoedForward) {
             echoedForward = true;
@@ -70,9 +68,7 @@ public class SearchIsland {
 
         echoedForward = false;
 
-        // Scan every 3 steps
-        scanningForCreek = true;
-        return scan.scanArea();
+        return creekFinder.startScanning();
     }
 
     private String handleStateTransition() {
@@ -109,23 +105,5 @@ public class SearchIsland {
                 logger.error("Invalid state. Stopping search.");
                 return stop.returnToHeadquarters();
         }
-    }
-
-    private String processScanResults() {
-        scanningForCreek = false;
-        JSONObject extras = information.getExtras();
-
-        if (!extras.has("creeks")) {
-            logger.info("No creeks found.");
-            return fly.flyOneUnit();
-        }
-
-        JSONArray creeks = extras.getJSONArray("creeks");
-        if (creeks.length() > 0) {
-            logger.info("Creek found! ID: " + creeks.getString(0));
-            return stop.returnToHeadquarters();
-        }
-
-        return fly.flyOneUnit();
     }
 }
