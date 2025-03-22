@@ -22,6 +22,7 @@ public class FollowCoastline {
     private FindIsland findIsland;
     private Direction currentDirection;
     private int stepsSinceLastScan = 0; 
+    private boolean scannedOnLastAction = false;
     private final CreekFinder creekFinder;
 
     public FollowCoastline() {
@@ -46,7 +47,12 @@ public class FollowCoastline {
 
     public String traverse() {
         logger.info("** Following the coastline");
-    
+
+        if (scannedOnLastAction) {
+            scannedOnLastAction = false;
+            return creekFinder.searchForCreek();
+        }
+        
         if (!echoedRight) {
             echoedRight = true;
             lastEchoDirection = "RIGHT";
@@ -74,10 +80,12 @@ public class FollowCoastline {
         }
         echoedRight = false;
         echoedLeft = false;
-    
+
         stepsSinceLastScan++;
+
         if (stepsSinceLastScan >= 3) {
             stepsSinceLastScan = 0;
+            scannedOnLastAction = true;
             return creekFinder.searchForCreek();
         }
     

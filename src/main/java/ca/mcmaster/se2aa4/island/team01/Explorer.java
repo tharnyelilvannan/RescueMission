@@ -18,6 +18,7 @@ public class Explorer implements IExplorerRaid {
     // CreekFinder creekFinder;
     GetResponse getResponse = new GetResponse();
     Drone drone = new Drone();
+    private int battery;
 
     @Override
     public void initialize(String s) {
@@ -51,6 +52,8 @@ public class Explorer implements IExplorerRaid {
         }
         Integer cost = information.getCost();
         logger.info("The cost of the action was {}", cost);
+        battery = battery - cost;
+        logger.info("The battery remaining is {}", battery);
         String status = information.getStatus();
         logger.info("The status of the drone is {}", status);
         JSONObject extraInfo = information.getExtras();
