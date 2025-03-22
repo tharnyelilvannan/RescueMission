@@ -18,6 +18,6 @@ public class CreekList {
     }
 
     public void addCreek(String id, Location coordinates) {
-        creeks.add(id, coordinates);
+        creeks.add(new Creek(id, coordinates));
     }
 }
