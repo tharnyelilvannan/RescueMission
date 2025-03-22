@@ -5,52 +5,50 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 public class GroundDetector {
-    private final Logger logger = LogManager.getLogger();
-    private boolean groundFound;
-    private ExtraInfo information;
+    private static final Logger logger = LogManager.getLogger(GroundDetector.class);
+    
+    private boolean groundFound = false;
     private int range;
-
-    public GroundDetector(){
-        groundFound = false;
-    }
 
     public void updateInfo(ExtraInfo info) {
         if (info == null) {
-            logger.error("Received null ExtraInfo in GroundDetector. Skipping update.");
+            logger.error("Received null ExtraInfo. Skipping update.");
             return;
         }
-        this.information = info;
-        detectGround();
+        detectGround(info.getExtras());
     }
-    
-   
-    protected boolean detectGround() {
-        JSONObject extras = information.getExtras();
 
-        if (extras.has("found")) {
-            String found = extras.getString("found");
-            
-            if ("GROUND".equals(found)){
-                groundFound = true; // found ground
-
-                if (extras.has("range")){
-                    range = extras.getInt("range");  
-                    logger.info("the range is " + range);
-                }
-            } 
-            else if ("OUT_OF_RANGE".equals(found)) { // If OUT_OF_RANGE
-                logger.info("Ground out of range"); 
-                
-            }
+    private void detectGround(JSONObject extras) {
+        String found = extras.optString("found", "");
+        
+        EchoStatus status = EchoStatus.fromString(found);
+        switch (status) {
+            case GROUND:
+                groundFound = true;
+                updateRange(extras);
+                break;
+            case OUT_OF_RANGE:
+                logger.info("Ground out of range.");
+                groundFound = false;
+                break;
+            default:
+                logger.warn("Unexpected 'found' value: " + found);
+                groundFound = false;
         }
+    }
+
+    private void updateRange(JSONObject extras) {
+        if (extras.has("range")) {
+            range = extras.getInt("range");
+            logger.info("Ground detected at range: " + range);
+        }
+    }
+
+    public boolean isGroundFound() {
         return groundFound;
     }
 
-    protected int getRange(){
-        return range; 
-    }
-
-    protected boolean isGroundFound() {
-        return groundFound;
+    public int getRange() {
+        return range;
     }
 }
