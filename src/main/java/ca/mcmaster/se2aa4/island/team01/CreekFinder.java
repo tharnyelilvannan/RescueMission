@@ -33,7 +33,6 @@ public class CreekFinder {
         this.information = info;
     }
     
-
     public String searchForCreek() {
         logger.info(hasScanned);
 
@@ -41,37 +40,38 @@ public class CreekFinder {
             logger.error("searchForCreek(): information is null");
             return null;
         }
-        if (!creekFound && !hasScanned) {
+    
+        if (!hasScanned) {
             logger.info("searchForCreek(): Performing scan");
             hasScanned = true;
-            return scan.scanArea(); // the issue is it doesnt search the scan for extras; it searches fly for extras
-        } else if (hasScanned) {
-            hasScanned = false;
-            JSONObject extras = information.getExtras();
-            logger.info(extras);
-            if (extras == null) {
-                logger.error("searchForCreek(): information.getExtras() is null");
-                return null;
-            }
-            if (extras.has("creeks")) {
-                JSONArray creeks = extras.getJSONArray("creeks");
-                logger.info("searchForCreek(): Found creeks array with size " + creeks.length());
-    
-                if (creeks.length() < 1) {   // No creeks found
-                    logger.info("searchForCreek(): No creeks found in scan");
-                    return null;
-                } else {
-                    creekId = creeks.getString(0);
-                    creekFound = true;
-                    logger.info("searchForCreek(): Creek found with ID " + creekId);
-                    return null;
-                }
-            } else {
-                logger.info("searchForCreek(): 'creeks' key not found in extras");
-            }
+            return scan.scanArea();
         }
-        return null; // Continue normal operations if no creek is found
+    
+        JSONObject extras = information.getExtras();
+        if (extras == null) {
+            logger.error("searchForCreek(): information.getExtras() is null");
+            return null;
+        }
+    
+        if (extras.has("creeks")) {
+            JSONArray creeks = extras.getJSONArray("creeks");
+            logger.info("searchForCreek(): Found creeks array with size " + creeks.length());
+    
+            if (creeks.length() < 1) {
+                logger.info("searchForCreek(): No creeks found in scan");
+            } else {
+                creekId = creeks.getString(0);
+                creekFound = true;
+                logger.info("searchForCreek(): Creek found with ID " + creekId);
+            }
+        } else {
+            logger.info("searchForCreek(): 'creeks' key not found in extras");
+        }
+    
+        hasScanned = false; // Reset after handling the scan result
+        return null;
     }
+    
     
 
     public boolean isCreekFound() {
