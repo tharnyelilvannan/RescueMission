@@ -2,24 +2,22 @@
 package ca.mcmaster.se2aa4.island.team01;
 
 import java.io.StringReader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import eu.ace_design.island.bot.IExplorerRaid;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import eu.ace_design.island.bot.IExplorerRaid;
+
 
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-    // private GroundDetector groundDetector;
-
-    // private String nextAction; 
-    // private String currentAction; 
-    private int battery;
-    
-    
-    MakeDecision decision; 
+    FindIsland findIsland; 
+    // CreekFinder creekFinder;
+    GetResponse getResponse = new GetResponse();
+    Drone drone = new Drone();
 
     @Override
     public void initialize(String s) {
@@ -32,21 +30,20 @@ public class Explorer implements IExplorerRaid {
         logger.info("The drone is facing {}", direction);
         battery = batteryLevel;
         logger.info("Battery level is {}", batteryLevel);
-
-        decision = new MakeDecision();
+        findIsland = new FindIsland();
         
     }
 
     @Override
     public String takeDecision() {
         logger.info("** Taking a decision"); 
-
-        return decision.makeDecision(); 
+        return drone.initalizeExploration();
     }
 
     @Override
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
+<<<<<<< HEAD
         logger.info("** Response received:\n" + response.toString(2));
         Integer cost = response.getInt("cost");
         logger.info("The cost of the action was {}", cost);
@@ -56,8 +53,22 @@ public class Explorer implements IExplorerRaid {
         battery = battery - cost;
         logger.info("The battery level is {}", battery);
         logger.info("Additional information received: {}", extraInfo);
+=======
+        ExtraInfo information = getResponse.translate(response);
 
-        decision.sendResponse(extraInfo);
+        if (information == null) {
+            logger.error("Received null ExtraInfo in acknowledgeResults. Skipping update.");
+            return;
+        }
+        Integer cost = information.getCost();
+        logger.info("The cost of the action was {}", cost);
+        String status = information.getStatus();
+        logger.info("The status of the drone is {}", status);
+        JSONObject extraInfo = information.getExtras();
+        logger.info("Additional information received: {}", extraInfo);
+        drone.updateInfo(information);
+>>>>>>> main
+
     }
 
     @Override
