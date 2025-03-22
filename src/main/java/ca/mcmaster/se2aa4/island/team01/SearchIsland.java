@@ -8,6 +8,7 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Echo;
 import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
+import ca.mcmaster.se2aa4.island.team01.CreekList;
 
 public class SearchIsland {
     private final Logger logger = LogManager.getLogger();
@@ -71,6 +72,7 @@ public class SearchIsland {
         return creekFinder.startScanning();
     }
 
+    // refactor later; probably
     private String handleStateTransition() {
         switch (state) {
             case MOVE_EAST:
@@ -106,4 +108,5 @@ public class SearchIsland {
                 return stop.returnToHeadquarters();
         }
     }
+
 }

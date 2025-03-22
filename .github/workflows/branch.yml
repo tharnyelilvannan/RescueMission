@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - tharny
+      - meigan
+      - senuni
 
 env:
   JAVA_ENV_VERSION: '21'

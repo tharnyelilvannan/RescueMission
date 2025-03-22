@@ -9,6 +9,7 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
 
+
 public class CreekFinder {
     private final Logger logger = LogManager.getLogger();
     private final Scan scan;
@@ -22,6 +23,7 @@ public class CreekFinder {
         this.scan = new Scan();
         this.fly = new Fly();
         this.stop = new Stop();
+
     }
 
     public void updateInfo(ExtraInfo info) {
@@ -30,6 +32,7 @@ public class CreekFinder {
 
     public boolean isScanning() {
         return scanningForCreek;
+
     }
 
     public boolean isCreekFound() {
