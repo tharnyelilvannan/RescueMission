@@ -8,19 +8,6 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
 
-/* *****************************************************************************
-         * Strategy
-         * 1. Face south
-         * 2. Make an echo to check if the ground is found.
-         * 3. If ground is out of range, then fly down one step
-         * 3. Keep repeating step 2-3 until ground is found
-         * 4. Once ground is found, face east again
-         * 5. Make an echo to check how close the drone is to ground (range)
-         * 6. Fly forward one step
-         * 7. Keep repeating step 5-6 until drone reaches ground (range == 0)
-         * 8. Once land is reached, drone makes a scan
-         * **************************************************************************** */
-
 public class FindIsland {
     private final Logger logger = LogManager.getLogger();
     private GroundDetector groundDetector;
