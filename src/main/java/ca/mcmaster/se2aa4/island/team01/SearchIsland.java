@@ -10,7 +10,6 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
-import ca.mcmaster.se2aa4.island.team01.CreekList;
 
 public class SearchIsland {
     private final Logger logger = LogManager.getLogger();
@@ -23,12 +22,16 @@ public class SearchIsland {
     private Direction currentDirection;
     private boolean echoedForward = false;
     private boolean scanningForCreek = false;
-    private Direction lastDirection;
 
+    private boolean keepTurning = false; 
+    private boolean flyUp = false; 
+    private boolean adjustPosition = false;
+
+    private Direction lastDirection;
+  
     private enum State {
-        MOVE_EAST, TURN_SOUTH_FROM_EAST, MOVE_SOUTH_FROM_EAST,
-        TURN_WEST, MOVE_WEST, TURN_SOUTH_FROM_WEST, MOVE_SOUTH_FROM_WEST,
-        TURN_EAST
+        MOVE_EAST, TURN_SOUTH_FROM_EAST,
+        TURN_WEST, TURN_NORTH_FROM_WEST, TURN_SOUTH_FROM_WEST,TURN_NORTH_FROM_EAST;
     }
 
     private State state = State.MOVE_EAST;
@@ -52,8 +55,9 @@ public class SearchIsland {
 
     public String exploreIsland() {
         logger.info("** Searching the island **");
-
+        
         if (scanningForCreek) return processScanResults();
+        if (keepTurning) return handleStateTransition();
 
         if (!echoedForward) {
             echoedForward = true;
@@ -63,8 +67,15 @@ public class SearchIsland {
         JSONObject extras = information.getExtras();
         if (extras.has("found") && extras.has("range")) {
             String found = extras.getString("found");
+            int range = extras.getInt("range"); 
 
-            if (!"GROUND".equals(found)) {
+            if (!"GROUND".equals(found)) { // reached the end of the island 
+
+
+                if (range >= 35){ // if at the end of the map
+                    flyUp = true;
+                    adjustPosition = true; 
+                }
                 echoedForward = false;
                 return handleStateTransition();
             }
@@ -81,35 +92,72 @@ public class SearchIsland {
     private String handleStateTransition() {
         switch (state) {
             case MOVE_EAST:
-                state = State.TURN_SOUTH_FROM_EAST;
+                if (flyUp){
+                //    state = State.TURN_NORTH_FROM_EAST; 
+                   state = State.TURN_NORTH_FROM_EAST;
+                   lastDirection = currentDirection;
+                   currentDirection = currentDirection.turnLeft(); 
+                   keepTurning = true; 
+                   return heading.changeHeading(currentDirection, lastDirection); // facing north
+                }
+                state = State.TURN_SOUTH_FROM_EAST; 
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection, lastDirection);
+                keepTurning = true;
+                return heading.changeHeading(currentDirection, lastDirection);// facing south 
 
+
+            case TURN_NORTH_FROM_EAST: 
+                if (adjustPosition) {
+                    adjustPosition = false; 
+                    return fly.flyOneUnit();
+                }
+                state = State.TURN_WEST; 
+                currentDirection = currentDirection.turnLeft();
+                lastDirection = currentDirection;
+                keepTurning = false; 
+                return heading.changeHeading(currentDirection, lastDirection); // facing west
+            
             case TURN_SOUTH_FROM_EAST:
-                state = State.MOVE_SOUTH_FROM_EAST;
-                return fly.flyOneUnit(currentDirection);
-
-            case MOVE_SOUTH_FROM_EAST:
-                state = State.TURN_WEST;
+                state = State.TURN_WEST; 
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection, lastDirection);
+                keepTurning = false; 
+                return heading.changeHeading(currentDirection, lastDirection);// facing west
+
 
             case TURN_WEST:
+                if (flyUp){
+                    state = State.TURN_NORTH_FROM_WEST; 
+                    lastDirection = currentDirection;
+                    currentDirection = currentDirection.turnRight(); 
+                    keepTurning = true; 
+                    return heading.changeHeading(currentDirection, lastDirection); // facing north
+                }
                 state = State.TURN_SOUTH_FROM_WEST;
                 lastDirection = currentDirection;
-                currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection, lastDirection);
+                currentDirection = currentDirection.turnLeft();
+                keepTurning = true; 
+                return heading.changeHeading(currentDirection, lastDirection);// facing south
 
-            case TURN_SOUTH_FROM_WEST:
-                state = State.MOVE_SOUTH_FROM_WEST;
-                return fly.flyOneUnit(currentDirection);
-
-            case MOVE_SOUTH_FROM_WEST:
-                state = State.TURN_SOUTH_FROM_EAST;
+            case TURN_NORTH_FROM_WEST:
+                if (adjustPosition) {
+                    adjustPosition = false; 
+                    return fly.flyOneUnit();
+                }
+                state = State.MOVE_EAST; 
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection, lastDirection);
+                keepTurning = false;
+                return heading.changeHeading(currentDirection, lastDirection); // facing east
+            
+        
+            case TURN_SOUTH_FROM_WEST:
+                state = State.MOVE_EAST;
+                lastDirection = currentDirection;
+                currentDirection = currentDirection.turnLeft();
+                keepTurning = false; 
+                return heading.changeHeading(currentDirection, lastDirection);// facing east
 
             default:
                 logger.error("Invalid state. Stopping search.");
