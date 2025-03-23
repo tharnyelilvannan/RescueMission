@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.island.team01;
 
-public class CurrentLocation extends Location {
+public class CurrentLocation extends Location implements Coordinates {
 
     private static CurrentLocation instance = null; 
 
@@ -15,11 +15,11 @@ public class CurrentLocation extends Location {
         return instance;
     }
 
-    public void changeXCoordinate(int x) {
+    public void setXCoordinate(int x) {
         location.set(0, x);
     }
 
-    public void changeYCoordinate(int y) {
+    public void setYCoordinate(int y) {
         location.set(1, y);
     }
 

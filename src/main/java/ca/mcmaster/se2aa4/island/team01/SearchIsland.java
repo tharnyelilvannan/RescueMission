@@ -185,9 +185,10 @@ public class SearchIsland {
         }
 
         if (sites.length() > 0) {
-            Site ESite = Site.get();
-            ESite.setID(sites.getString(0));
-            ESite.setLocation(current.getXCoordinate(), current.getYCoordinate());
+            Site site = Site.get();
+            site.setID(sites.getString(0));
+            site.setXCoordinate(current.getXCoordinate());
+            site.setYCoordinate(current.getYCoordinate());
             logger.info("Emergency site found! ID: " + sites.getString(0));
             return stop.returnToHeadquarters();
         }

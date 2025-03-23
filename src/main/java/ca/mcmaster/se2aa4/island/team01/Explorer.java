@@ -15,10 +15,10 @@ public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
     FindIsland findIsland; 
-    // CreekFinder creekFinder;
     GetResponse getResponse = new GetResponse();
     Drone drone = new Drone();
     private int battery;
+    CreekCalculator calculator = new CreekCalculator();
 
     @Override
     public void initialize(String s) {
@@ -63,7 +63,8 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String deliverFinalReport() {
-        // print nearest creek
+        Creek closestCreek = calculator.calculateCreek();
+        logger.info("The closest creek is " + closestCreek.getID());
         return "Exploration complete.";
     }
 }
