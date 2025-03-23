@@ -10,7 +10,6 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
-//import ca.mcmaster.se2aa4.island.teamXXX.CreekList;
 
 public class SearchIsland {
     private final Logger logger = LogManager.getLogger();
@@ -23,10 +22,13 @@ public class SearchIsland {
     private Direction currentDirection;
     private boolean echoedForward = false;
     private boolean scanningForCreek = false;
+
     private boolean keepTurning = false; 
     private boolean flyUp = false; 
     private boolean adjustPosition = false;
-   
+
+    private Direction lastDirection;
+  
     private enum State {
         MOVE_EAST, TURN_SOUTH_FROM_EAST,
         TURN_WEST, TURN_NORTH_FROM_WEST, TURN_SOUTH_FROM_WEST,TURN_NORTH_FROM_EAST;
@@ -92,15 +94,17 @@ public class SearchIsland {
             case MOVE_EAST:
                 if (flyUp){
                 //    state = State.TURN_NORTH_FROM_EAST; 
-                    state = State.TURN_NORTH_FROM_EAST;
+                   state = State.TURN_NORTH_FROM_EAST;
+                   lastDirection = currentDirection;
                    currentDirection = currentDirection.turnLeft(); 
                    keepTurning = true; 
-                   return heading.changeHeading(currentDirection); // facing north
+                   return heading.changeHeading(currentDirection, lastDirection); // facing north
                 }
                 state = State.TURN_SOUTH_FROM_EAST; 
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = true;
-                return heading.changeHeading(currentDirection);// facing south 
+                return heading.changeHeading(currentDirection, lastDirection);// facing south 
 
 
             case TURN_NORTH_FROM_EAST: 
@@ -109,27 +113,32 @@ public class SearchIsland {
                     return fly.flyOneUnit();
                 }
                 state = State.TURN_WEST; 
-                currentDirection = currentDirection.turnLeft(); 
+                currentDirection = currentDirection.turnLeft();
+                lastDirection = currentDirection;
                 keepTurning = false; 
-                return heading.changeHeading(currentDirection); // facing west
+                return heading.changeHeading(currentDirection, lastDirection); // facing west
             
             case TURN_SOUTH_FROM_EAST:
                 state = State.TURN_WEST; 
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false; 
-                return heading.changeHeading(currentDirection);// facing west
+                return heading.changeHeading(currentDirection, lastDirection);// facing west
+
 
             case TURN_WEST:
                 if (flyUp){
                     state = State.TURN_NORTH_FROM_WEST; 
+                    lastDirection = currentDirection;
                     currentDirection = currentDirection.turnRight(); 
                     keepTurning = true; 
-                    return heading.changeHeading(currentDirection); // facing north
+                    return heading.changeHeading(currentDirection, lastDirection); // facing north
                 }
                 state = State.TURN_SOUTH_FROM_WEST;
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = true; 
-                return heading.changeHeading(currentDirection);// facing south
+                return heading.changeHeading(currentDirection, lastDirection);// facing south
 
             case TURN_NORTH_FROM_WEST:
                 if (adjustPosition) {
@@ -137,16 +146,18 @@ public class SearchIsland {
                     return fly.flyOneUnit();
                 }
                 state = State.MOVE_EAST; 
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false;
-                return heading.changeHeading(currentDirection); // facing east
+                return heading.changeHeading(currentDirection, lastDirection); // facing east
             
         
             case TURN_SOUTH_FROM_WEST:
                 state = State.MOVE_EAST;
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = false; 
-                return heading.changeHeading(currentDirection);// facing east
+                return heading.changeHeading(currentDirection, lastDirection);// facing east
 
             default:
                 logger.error("Invalid state. Stopping search.");
@@ -163,24 +174,24 @@ public class SearchIsland {
 
         if (!extras.has("creeks")) {
             logger.info("No creeks found.");
-            return fly.flyOneUnit();
+            return fly.flyOneUnit(currentDirection);
         }
 
         JSONArray creeks = extras.getJSONArray("creeks");
         JSONArray sites = extras.getJSONArray("sites");
         if (creeks.length() > 0) {
-            creekList.addCreek(creeks.getString(0), current);
+            creekList.addCreek(creeks.getString(0), current.getXCoordinate(), current.getYCoordinate());
             logger.info("Creek found! ID: " + creeks.getString(0));
         }
 
         if (sites.length() > 0) {
             Site ESite = Site.get();
             ESite.setID(sites.getString(0));
-            ESite.setLocation(current);
+            ESite.setLocation(current.getXCoordinate(), current.getYCoordinate());
             logger.info("Emergency site found! ID: " + sites.getString(0));
             return stop.returnToHeadquarters();
         }
 
-        return fly.flyOneUnit();
+        return fly.flyOneUnit(currentDirection);
     }
 }

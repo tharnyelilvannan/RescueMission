@@ -13,6 +13,21 @@ public class CurrentLocation extends Location {
             instance = new CurrentLocation();
         }
         return instance;
-        
+    }
+
+    public void changeXCoordinate(int x) {
+        location.set(0, x);
+    }
+
+    public void changeYCoordinate(int y) {
+        location.set(1, y);
+    }
+
+    public int getXCoordinate() {
+        return location.get(0);
+    }
+
+    public int getYCoordinate() {
+        return location.get(1);
     }
 }

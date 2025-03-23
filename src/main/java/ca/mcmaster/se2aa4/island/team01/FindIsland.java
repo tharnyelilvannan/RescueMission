@@ -30,6 +30,7 @@ public class FindIsland {
     private Scan scan;
     private Stop stop;
     private Direction currentDirection = Direction.EAST;
+    private Direction lastDirection;
     
     private boolean flyForward;
     private boolean initialSearch;
@@ -62,8 +63,9 @@ public class FindIsland {
         if (flyPhase == true) {
             if (initialSearch == true) {
                 initialSearch = false;
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight(); // flying south to start off
-                return heading.changeHeading(currentDirection);
+                return heading.changeHeading(currentDirection, lastDirection);
             }
 
             // To detect the island: the calls alternate between making an echo from the left wing and making flying forward one step
@@ -72,16 +74,17 @@ public class FindIsland {
                 return echo.echoLeftWing(currentDirection);
             } else if (groundDetector.isGroundFound() == false && flyForward == true) { // fly one step
                 flyForward = false;
-                return fly.flyOneUnit();
+                return fly.flyOneUnit(currentDirection);
             } else if (groundDetector.isGroundFound() == true && currentDirection == Direction.SOUTH) {
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft(); // face east
-                return heading.changeHeading(currentDirection);
+                return heading.changeHeading(currentDirection, lastDirection);
             }
 
             // Once ground is detected: the calls alternate between making an echo from the nose and making flying forward one step
             else if (groundDetector.isGroundFound() == true && groundDetector.getRange() > 0 && flyForward == true) { // fly one step                                                                 
                 flyForward = false;
-                return fly.flyOneUnit();
+                return fly.flyOneUnit(currentDirection);
             } else if (groundDetector.isGroundFound() == true && groundDetector.getRange() > 0 && flyForward == false) { // echo  straight                                                                                    // straight
                 flyForward = true;
                 return echo.echoStraight(currentDirection);
@@ -91,7 +94,7 @@ public class FindIsland {
                 return scan.scanArea();
             }
         }
-        return fly.flyOneUnit();
+        return fly.flyOneUnit(currentDirection);
     }
 
     public boolean isLandingPhase() {
