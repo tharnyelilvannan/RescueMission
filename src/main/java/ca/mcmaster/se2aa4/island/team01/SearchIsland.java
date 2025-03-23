@@ -10,7 +10,7 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
 import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
-import ca.mcmaster.se2aa4.island.team01.CreekList;
+//import ca.mcmaster.se2aa4.island.teamXXX.CreekList;
 
 public class SearchIsland {
     private final Logger logger = LogManager.getLogger();
@@ -25,10 +25,11 @@ public class SearchIsland {
     private boolean scanningForCreek = false;
     private boolean keepTurning = false; 
     private boolean flyUp = false; 
-
+    private boolean adjustPosition = false;
+   
     private enum State {
         MOVE_EAST, TURN_SOUTH_FROM_EAST,
-        TURN_WEST, TURN_NORTH_FROM_WEST, TURN_SOUTH_FROM_WEST,TURN_NORTH_FROM_EAST, ES;
+        TURN_WEST, TURN_NORTH_FROM_WEST, TURN_SOUTH_FROM_WEST,TURN_NORTH_FROM_EAST;
     }
 
     private State state = State.MOVE_EAST;
@@ -67,8 +68,11 @@ public class SearchIsland {
             int range = extras.getInt("range"); 
 
             if (!"GROUND".equals(found)) { // reached the end of the island 
+
+
                 if (range >= 35){ // if at the end of the map
-                    flyUp = true; 
+                    flyUp = true;
+                    adjustPosition = true; 
                 }
                 echoedForward = false;
                 return handleStateTransition();
@@ -86,9 +90,9 @@ public class SearchIsland {
     private String handleStateTransition() {
         switch (state) {
             case MOVE_EAST:
-            
                 if (flyUp){
-                   state = State.TURN_NORTH_FROM_EAST; 
+                //    state = State.TURN_NORTH_FROM_EAST; 
+                    state = State.TURN_NORTH_FROM_EAST;
                    currentDirection = currentDirection.turnLeft(); 
                    keepTurning = true; 
                    return heading.changeHeading(currentDirection); // facing north
@@ -98,13 +102,18 @@ public class SearchIsland {
                 keepTurning = true;
                 return heading.changeHeading(currentDirection);// facing south 
 
-            case TURN_SOUTH_FROM_EAST:
-                if (flyUp){
-                    state = State.TURN_WEST; 
-                    currentDirection = currentDirection.turnLeft(); 
-                    keepTurning = false; 
-                    return heading.changeHeading(currentDirection); // facing west
+
+            case TURN_NORTH_FROM_EAST: 
+                if (adjustPosition) {
+                    adjustPosition = false; 
+                    return fly.flyOneUnit();
                 }
+                state = State.TURN_WEST; 
+                currentDirection = currentDirection.turnLeft(); 
+                keepTurning = false; 
+                return heading.changeHeading(currentDirection); // facing west
+            
+            case TURN_SOUTH_FROM_EAST:
                 state = State.TURN_WEST; 
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false; 
@@ -122,13 +131,18 @@ public class SearchIsland {
                 keepTurning = true; 
                 return heading.changeHeading(currentDirection);// facing south
 
-            case TURN_SOUTH_FROM_WEST:
-                if (flyUp){
-                    state = State.ES; 
-                    currentDirection = currentDirection.turnRight();
-                    keepTurning = false;
-                    return heading.changeHeading(currentDirection); // facing east
+            case TURN_NORTH_FROM_WEST:
+                if (adjustPosition) {
+                    adjustPosition = false; 
+                    return fly.flyOneUnit();
                 }
+                state = State.MOVE_EAST; 
+                currentDirection = currentDirection.turnRight();
+                keepTurning = false;
+                return heading.changeHeading(currentDirection); // facing east
+            
+        
+            case TURN_SOUTH_FROM_WEST:
                 state = State.MOVE_EAST;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = false; 
