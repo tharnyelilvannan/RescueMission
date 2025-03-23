@@ -110,7 +110,7 @@ public class SearchIsland {
             case TURN_NORTH_FROM_EAST: 
                 if (adjustPosition) {
                     adjustPosition = false; 
-                    return fly.flyOneUnit();
+                    return fly.flyOneUnit(currentDirection);
                 }
                 state = State.TURN_WEST; 
                 currentDirection = currentDirection.turnLeft();
@@ -143,7 +143,7 @@ public class SearchIsland {
             case TURN_NORTH_FROM_WEST:
                 if (adjustPosition) {
                     adjustPosition = false; 
-                    return fly.flyOneUnit();
+                    return fly.flyOneUnit(currentDirection);
                 }
                 state = State.MOVE_EAST; 
                 lastDirection = currentDirection;
