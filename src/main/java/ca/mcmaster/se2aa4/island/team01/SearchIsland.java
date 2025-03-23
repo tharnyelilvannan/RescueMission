@@ -132,14 +132,14 @@ public class SearchIsland {
         JSONArray creeks = extras.getJSONArray("creeks");
         JSONArray sites = extras.getJSONArray("sites");
         if (creeks.length() > 0) {
-            creekList.addCreek(creeks.getString(0), current);
+            creekList.addCreek(creeks.getString(0), current.getXCoordinate(), current.getYCoordinate());
             logger.info("Creek found! ID: " + creeks.getString(0));
         }
 
         if (sites.length() > 0) {
             Site ESite = Site.get();
             ESite.setID(sites.getString(0));
-            ESite.setLocation(current);
+            ESite.setLocation(current.getXCoordinate(), current.getYCoordinate());
             logger.info("Emergency site found! ID: " + sites.getString(0));
             return stop.returnToHeadquarters();
         }
