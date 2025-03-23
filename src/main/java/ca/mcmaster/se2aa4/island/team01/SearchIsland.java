@@ -22,7 +22,6 @@ public class SearchIsland {
     private Direction currentDirection;
     private boolean echoedForward = false;
     private boolean scanningForCreek = false;
-
     private boolean keepTurning = false; 
     private boolean flyUp = false; 
     private boolean adjustPosition = false;
@@ -117,7 +116,6 @@ public class SearchIsland {
                 }
                 
                 state = State.TURN_SOUTH_FROM_EAST; 
-                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = true;
                 return heading.changeHeading(currentDirection);// turn south 
@@ -130,15 +128,13 @@ public class SearchIsland {
                 }
 
                 state = State.TURN_WEST; 
-                currentDirection = currentDirection.turnLeft();
-                lastDirection = currentDirection;
+                currentDirection = currentDirection.turnLeft(); 
                 keepTurning = false; 
                 return heading.changeHeading(currentDirection); // turn west
             
             // currently facing south
             case TURN_SOUTH_FROM_EAST:
                 state = State.TURN_WEST; 
-                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false; 
                 return heading.changeHeading(currentDirection);// turn west
@@ -147,17 +143,15 @@ public class SearchIsland {
             case TURN_WEST:
                 if (flyUp){
                     state = State.TURN_NORTH_FROM_WEST; 
-                    lastDirection = currentDirection;
                     currentDirection = currentDirection.turnRight(); 
                     keepTurning = true; 
-                    return heading.changeHeading(currentDirection, lastDirection); // facing north
+                    return heading.changeHeading(currentDirection); // facing north
                 }
 
                 state = State.TURN_SOUTH_FROM_WEST;
-                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = true; 
-                return heading.changeHeading(currentDirection, lastDirection);// facing south
+                return heading.changeHeading(currentDirection);// facing south
 
             // facing north
             case TURN_NORTH_FROM_WEST:
@@ -166,19 +160,17 @@ public class SearchIsland {
                     return fly.flyOneUnit();
                 }
                 state = State.MOVE_EAST; 
-                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false;
-                return heading.changeHeading(currentDirection, lastDirection); // facing east
+                return heading.changeHeading(currentDirection); // facing east
             
             
             // facing south south 
             case TURN_SOUTH_FROM_WEST:
                 state = State.MOVE_EAST;
-                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = false; 
-                return heading.changeHeading(currentDirection, lastDirection);// facing east
+                return heading.changeHeading(currentDirection);// facing east
 
             default:
                 logger.error("Invalid state. Stopping search.");
@@ -197,24 +189,24 @@ public class SearchIsland {
 
         if (!extras.has("creeks")) {
             logger.info("No creeks found.");
-            return fly.flyOneUnit(currentDirection);
+            return fly.flyOneUnit();
         }
 
         JSONArray creeks = extras.getJSONArray("creeks");
         JSONArray sites = extras.getJSONArray("sites");
         if (creeks.length() > 0) {
-            creekList.addCreek(creeks.getString(0), current.getXCoordinate(), current.getYCoordinate());
+            creekList.addCreek(creeks.getString(0), current);
             logger.info("Creek found! ID: " + creeks.getString(0));
         }
 
         if (sites.length() > 0) {
             Site ESite = Site.get();
             ESite.setID(sites.getString(0));
-            ESite.setLocation(current.getXCoordinate(), current.getYCoordinate());
+            ESite.setLocation(current);
             logger.info("Emergency site found! ID: " + sites.getString(0));
             return stop.returnToHeadquarters();
         }
 
-        return fly.flyOneUnit(currentDirection);
+        return fly.flyOneUnit();
     }
 }
