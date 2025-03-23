@@ -17,7 +17,7 @@ public class CreekList {
         return instance;
     }
 
-    public void addCreek(String id, Location coordinates) {
-        creeks.add(new Creek(id, coordinates));
+    public void addCreek(String id, int x, int y) {
+        creeks.add(new Creek(id, x, y));
     }
 }
