@@ -23,6 +23,7 @@ public class SearchIsland {
     private Direction currentDirection;
     private boolean echoedForward = false;
     private boolean scanningForCreek = false;
+    private Direction lastDirection;
 
     private enum State {
         MOVE_EAST, TURN_SOUTH_FROM_EAST, MOVE_SOUTH_FROM_EAST,
@@ -81,31 +82,34 @@ public class SearchIsland {
         switch (state) {
             case MOVE_EAST:
                 state = State.TURN_SOUTH_FROM_EAST;
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection);
+                return heading.changeHeading(currentDirection, lastDirection);
 
             case TURN_SOUTH_FROM_EAST:
                 state = State.MOVE_SOUTH_FROM_EAST;
-                return fly.flyOneUnit();
+                return fly.flyOneUnit(currentDirection);
 
             case MOVE_SOUTH_FROM_EAST:
                 state = State.TURN_WEST;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection);
+                return heading.changeHeading(currentDirection, lastDirection);
 
             case TURN_WEST:
                 state = State.TURN_SOUTH_FROM_WEST;
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection);
+                return heading.changeHeading(currentDirection, lastDirection);
 
             case TURN_SOUTH_FROM_WEST:
                 state = State.MOVE_SOUTH_FROM_WEST;
-                return fly.flyOneUnit();
+                return fly.flyOneUnit(currentDirection);
 
             case MOVE_SOUTH_FROM_WEST:
                 state = State.TURN_SOUTH_FROM_EAST;
+                lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                return heading.changeHeading(currentDirection);
+                return heading.changeHeading(currentDirection, lastDirection);
 
             default:
                 logger.error("Invalid state. Stopping search.");
@@ -122,7 +126,7 @@ public class SearchIsland {
 
         if (!extras.has("creeks")) {
             logger.info("No creeks found.");
-            return fly.flyOneUnit();
+            return fly.flyOneUnit(currentDirection);
         }
 
         JSONArray creeks = extras.getJSONArray("creeks");
@@ -140,6 +144,6 @@ public class SearchIsland {
             return stop.returnToHeadquarters();
         }
 
-        return fly.flyOneUnit();
+        return fly.flyOneUnit(currentDirection);
     }
 }

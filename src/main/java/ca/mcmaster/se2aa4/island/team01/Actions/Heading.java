@@ -4,11 +4,13 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import ca.mcmaster.se2aa4.island.team01.Direction;
+import ca.mcmaster.se2aa4.island.team01.CurrentLocationTracker;
 
 public class Heading {
     private final Logger logger = LogManager.getLogger();
+    CurrentLocationTracker tracker = new CurrentLocationTracker();
 
-    public String changeHeading(Direction currentDirection){
+    public String changeHeading(Direction currentDirection, Direction lastDirection){
         JSONObject request = new JSONObject();
         request.put("action", "heading"); // do heading action
 
@@ -17,6 +19,9 @@ public class Heading {
 
         request.put("parameters", parameters); 
         logger.info("Heading request:" + request.toString()); 
+
+        tracker.move(lastDirection);
+        tracker.move(currentDirection);
 
         return request.toString();
     }
