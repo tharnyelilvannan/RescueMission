@@ -27,6 +27,7 @@ public class SearchIsland {
     private boolean flyUp = false; 
     private boolean adjustPosition = false;
 
+    int count = 0; 
     private Direction lastDirection;
   
     private enum State {
@@ -72,12 +73,21 @@ public class SearchIsland {
             if (!"GROUND".equals(found)) { // reached the end of the island 
 
 
-                if (range >= 35){ // if at the end of the map
-                    flyUp = true;
-                    adjustPosition = true; 
+                if (count >= 15){ // 15-20 for maps 03, 10, 20 , 10 for map 06
+                    flyUp = true;// start searching in the north direction instead
+                    adjustPosition = true;
+                    count = 0;  
                 }
-                echoedForward = false;
-                return handleStateTransition();
+
+                if (range > 9){
+                    echoedForward = false;
+                    return fly.flyOneUnit(currentDirection); 
+                }
+                else{// if near the edge of map
+                    count++; 
+                    echoedForward = false;
+                    return handleStateTransition();
+                }
             }
         }
 
@@ -91,24 +101,27 @@ public class SearchIsland {
     // refactor later; probably
     private String handleStateTransition() {
         switch (state) {
+
+            // currently facing east
             case MOVE_EAST:
+
                 if (flyUp){
-                //    state = State.TURN_NORTH_FROM_EAST; 
                    state = State.TURN_NORTH_FROM_EAST;
                    lastDirection = currentDirection;
                    currentDirection = currentDirection.turnLeft(); 
                    keepTurning = true; 
-                   return heading.changeHeading(currentDirection, lastDirection); // facing north
+                   return heading.changeHeading(currentDirection, lastDirection); // turn north
                 }
                 state = State.TURN_SOUTH_FROM_EAST; 
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = true;
-                return heading.changeHeading(currentDirection, lastDirection);// facing south 
+                return heading.changeHeading(currentDirection, lastDirection);// turn south 
 
 
+            // currently facing north
             case TURN_NORTH_FROM_EAST: 
-                if (adjustPosition) {
+                if (adjustPosition) { // adjusts the drone's position so that it's skips a line
                     adjustPosition = false; 
                     return fly.flyOneUnit(currentDirection);
                 }
@@ -116,16 +129,17 @@ public class SearchIsland {
                 currentDirection = currentDirection.turnLeft();
                 lastDirection = currentDirection;
                 keepTurning = false; 
-                return heading.changeHeading(currentDirection, lastDirection); // facing west
+                return heading.changeHeading(currentDirection, lastDirection); // turn west
             
+            // currently facing south
             case TURN_SOUTH_FROM_EAST:
                 state = State.TURN_WEST; 
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false; 
-                return heading.changeHeading(currentDirection, lastDirection);// facing west
+                return heading.changeHeading(currentDirection, lastDirection);// turn west
 
-
+            // facing west
             case TURN_WEST:
                 if (flyUp){
                     state = State.TURN_NORTH_FROM_WEST; 
@@ -140,6 +154,7 @@ public class SearchIsland {
                 keepTurning = true; 
                 return heading.changeHeading(currentDirection, lastDirection);// facing south
 
+            // facing north
             case TURN_NORTH_FROM_WEST:
                 if (adjustPosition) {
                     adjustPosition = false; 
@@ -151,7 +166,7 @@ public class SearchIsland {
                 keepTurning = false;
                 return heading.changeHeading(currentDirection, lastDirection); // facing east
             
-        
+            // facing south
             case TURN_SOUTH_FROM_WEST:
                 state = State.MOVE_EAST;
                 lastDirection = currentDirection;
