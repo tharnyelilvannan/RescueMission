@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.island.team01;
 import java.util.ArrayList;
 
 public class CreekList {
-    ArrayList<Creek> creeks = new ArrayList<>();
+    private ArrayList<Creek> creeks = new ArrayList<>();
     private static CreekList instance = null;
 
     private CreekList() {
@@ -19,5 +19,9 @@ public class CreekList {
 
     public void addCreek(String id, int x, int y) {
         creeks.add(new Creek(id, x, y));
+    }
+
+    public ArrayList<Creek> getCreekList() {
+        return creeks;
     }
 }

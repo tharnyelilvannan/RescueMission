@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.island.team01;
 
-public class Site {
+public class Site implements Coordinates, ID {
     private static Site instance = null;
     private static String id;
     private static int x;
@@ -21,9 +21,24 @@ public class Site {
         this.id = id;
     }
 
-    public void setLocation(int x, int y) {
+    public String getID() {
+        return this.id;
+    }
+
+    public void setXCoordinate(int x) {
         this.x = x;
+    }
+
+    public void setYCoordinate(int y) {
         this.y = y;
+    }
+
+    public int getXCoordinate() {
+        return this.x;
+    }
+
+    public int getYCoordinate() {
+        return this.y;
     }
 
 }
