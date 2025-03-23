@@ -3,7 +3,8 @@ package ca.mcmaster.se2aa4.island.team01;
 public class Site {
     private static Site instance = null;
     private static String id;
-    private static Location coordinates;
+    private static int x;
+    private static int y;
 
     private Site() {
     }
@@ -20,8 +21,9 @@ public class Site {
         this.id = id;
     }
 
-    public void setLocation(Location coordinates) {
-        this.coordinates = coordinates;
+    public void setLocation(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
 }
