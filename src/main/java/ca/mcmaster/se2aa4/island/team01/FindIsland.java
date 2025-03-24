@@ -1,22 +1,7 @@
 package ca.mcmaster.se2aa4.island.team01;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team01.Actions.Echo;
-import ca.mcmaster.se2aa4.island.team01.Actions.Fly;
-import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
-import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
-import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
-
-public class FindIsland {
-    private final Logger logger = LogManager.getLogger();
+public class FindIsland extends ExploreInterface {
     private GroundDetector groundDetector;
-    private Echo echo;
-    private Heading heading;
-    private Fly fly;
-    private Scan scan;
-    private Stop stop;
-    private Direction currentDirection = Direction.EAST;
     private Direction lastDirection;
     
     private boolean flyForward;
@@ -25,62 +10,62 @@ public class FindIsland {
     private boolean landingPhase;
 
     public FindIsland() {
+        super();
         groundDetector = new GroundDetector();
-        echo = new Echo();
-        heading = new Heading();
-        fly = new Fly();
-        scan = new Scan();
-        stop = new Stop();
         flyForward = false;
         initialSearch = true;
         flyPhase = true;
         landingPhase = false;
     }
 
+    @Override
+    public void updateInfo(ExtraInfo info) {
+        updateGroundDetector(info);
+    }
+
     public void updateGroundDetector(ExtraInfo info) {
         if (info != null) {
             groundDetector.updateInfo(info);
+        } else {
+            logger.error("Received null ExtraInfo. Skipping ground detector update.");
         }
     }
 
-    public String searchForGround() {
+    @Override
+    public String explore() {
         logger.info("** Making decision");
 
-         // Fly phase: must fly to the island from starting position
-        if (flyPhase == true) {
-            if (initialSearch == true) {
+        if (flyPhase) {
+            if (initialSearch) {
                 initialSearch = false;
                 lastDirection = currentDirection;
-                currentDirection = currentDirection.turnRight(); // flying south to start off
+                currentDirection = currentDirection.turnRight(); // Fly south to start
                 return heading.changeHeading(currentDirection, lastDirection);
             }
 
-            // To detect the island: the calls alternate between making an echo from the left wing and making flying forward one step
-            if (groundDetector.isGroundFound() == false && flyForward == false) {       // make an echo
+            if (!groundDetector.isGroundFound() && !flyForward) { // Echo left
                 flyForward = true;
                 return echo.echoLeftWing(currentDirection);
-            } else if (groundDetector.isGroundFound() == false && flyForward == true) { // fly one step
+            } else if (!groundDetector.isGroundFound() && flyForward) { // Fly forward
                 flyForward = false;
                 return fly.flyOneUnit(currentDirection);
-            } else if (groundDetector.isGroundFound() == true && currentDirection == Direction.SOUTH) {
+            } else if (groundDetector.isGroundFound() && currentDirection == Direction.SOUTH) {
                 lastDirection = currentDirection;
-                currentDirection = currentDirection.turnLeft(); // face east
+                currentDirection = currentDirection.turnLeft(); // Face east
                 return heading.changeHeading(currentDirection, lastDirection);
-            }
-
-            // Once ground is detected: the calls alternate between making an echo from the nose and making flying forward one step
-            else if (groundDetector.isGroundFound() == true && groundDetector.getRange() > 0 && flyForward == true) { // fly one step                                                                 
+            } else if (groundDetector.isGroundFound() && groundDetector.getRange() > 0 && flyForward) { // Fly forward
                 flyForward = false;
                 return fly.flyOneUnit(currentDirection);
-            } else if (groundDetector.isGroundFound() == true && groundDetector.getRange() > 0 && flyForward == false) { // echo  straight                                                                                    // straight
+            } else if (groundDetector.isGroundFound() && groundDetector.getRange() > 0 && !flyForward) { // Echo straight
                 flyForward = true;
                 return echo.echoStraight(currentDirection);
-            } else { // Ground is reached
+            } else { // Ground reached
                 flyPhase = false;
                 landingPhase = true;
                 return scan.scanArea();
             }
         }
+        
         return fly.flyOneUnit(currentDirection);
     }
 

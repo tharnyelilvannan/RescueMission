@@ -33,9 +33,9 @@ public class Drone {
     public String initalizeExploration() {
         String decision;
         if (findIsland.isLandingPhase() == false) {
-            decision = findIsland.searchForGround(); 
+            decision = findIsland.explore(); 
         } else if (findIsland.isLandingPhase() == true && islandLength.hasFoundLength() == false) {
-            decision = islandLength.measureIsland();
+            decision = islandLength.explore();
         } else if (islandLength.hasFoundLength() == true) {
             int currentLength = islandLength.getIslandLength();
             searchIsland.updateIslandLength(currentLength);
