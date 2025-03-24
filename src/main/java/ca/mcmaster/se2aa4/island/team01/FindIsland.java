@@ -38,7 +38,6 @@ public class FindIsland extends ExploreAbstract {
         CurrentLocationTracker currentLocation = CurrentLocationTracker.get();
 
         if (flyPhase) {
-            scanPhase = true;
             if (initialSearch) {
                 initialSearch = false;
                 lastDirection = currentDirection;
