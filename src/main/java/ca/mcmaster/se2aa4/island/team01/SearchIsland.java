@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.island.team01;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class SearchIsland extends ExploreInterface {
+public class SearchIsland extends ExploreAbstract {
     private ExtraInfo information;
     private boolean echoedForward = false;
     private boolean scanningForCreek = false;

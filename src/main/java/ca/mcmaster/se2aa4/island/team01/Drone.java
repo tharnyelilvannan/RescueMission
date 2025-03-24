@@ -24,7 +24,7 @@ public class Drone {
     }
     public void updateInfo(ExtraInfo info) {
         if (info != null) {
-            findIsland.updateGroundDetector(info);
+            findIsland.updateInfo(info);
             searchIsland.updateInfo(info);
             islandLength.updateInfo(info);
         }

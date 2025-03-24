@@ -2,7 +2,7 @@ package ca.mcmaster.se2aa4.island.team01;
 
 import org.json.JSONObject;
 
-public class IslandLength extends ExploreInterface {
+public class IslandLength extends ExploreAbstract {
     private ExtraInfo information;
     private FindIsland findIsland;
     private Direction prevDirection;
