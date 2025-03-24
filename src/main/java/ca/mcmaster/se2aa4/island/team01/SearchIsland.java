@@ -54,7 +54,7 @@ public class SearchIsland {
         this.information = info;
     }
 
-    public String exploreIsland() {
+    public String exploreIsland(int islandLength) {
         logger.info("** Searching the island **");
         
         if (scanningForCreek) return processScanResults();
