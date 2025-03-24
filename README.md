@@ -1,4 +1,4 @@
-# Assignment A2 - Rescue mission
+# Assignment A2 - Rescue Mission
 
 ## Product Description
 
@@ -9,7 +9,7 @@ This product is an _exploration command center_ for the [Island](https://ace-des
 
 ### Strategy description
 
-The exploration strategy is for now to stop exploring as soon as we start. We stay safe and fly back to base immediately.
+The exploration strategy is to search all odd rows in a grid, then all even rows. As soon as the emergency site is found, we stop and return the closest creek we have found so far.
 
 ## How to compile, run and deploy
 
