@@ -10,7 +10,7 @@ public class Scan {
         JSONObject request = new JSONObject();
         request.put("action", "scan"); // do scan action
 
-        logger.info("Scan request:" + request.toString()); 
+        logger.trace("Scan request:" + request.toString()); 
         return request.toString();
     }
 }

@@ -21,21 +21,20 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public void initialize(String s) {
-        logger.info("** Initializing the Exploration Command Center");
+        logger.trace("** Initializing the Exploration Command Center");
         JSONObject info = new JSONObject(new JSONTokener(new StringReader(s)));
-        logger.info("** Initialization info:\n {}", info.toString(2));
-
+        logger.trace("** Initialization info:\n {}", info.toString(2));
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
-        logger.info("The drone is facing {}", direction);
-        logger.info("Battery level is {}", batteryLevel);
+        logger.trace("The drone is facing {}", direction);
+        logger.trace("Battery level is {}", batteryLevel);
         findIsland = new FindIsland();
         
     }
 
     @Override
     public String takeDecision() {
-        logger.info("** Taking a decision"); 
+        logger.trace("** Taking a decision"); 
         return drone.initalizeExploration();
     }
 
@@ -48,11 +47,11 @@ public class Explorer implements IExplorerRaid {
             return;
         }
         Integer cost = information.getCost();
-        logger.info("The cost of the action was {}", cost);
+        logger.trace("The cost of the action was {}", cost);
         String status = information.getStatus();
-        logger.info("The status of the drone is {}", status);
+        logger.trace("The status of the drone is {}", status);
         JSONObject extraInfo = information.getExtras();
-        logger.info("Additional information received: {}", extraInfo);
+        logger.trace("Additional information received: {}", extraInfo);
         drone.updateInfo(information);
 
     }
@@ -60,7 +59,7 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String deliverFinalReport() {
         Creek closestCreek = calculator.calculateCreek();
-        logger.error("The closest creek is " + closestCreek.getID());
+        logger.info("The closest creek is " + closestCreek.getID());
         return "Exploration complete.";
     }
 }

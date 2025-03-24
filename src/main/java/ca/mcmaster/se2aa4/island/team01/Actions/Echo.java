@@ -16,7 +16,7 @@ public class Echo {
             parameters.put("direction", currentDirection.getValue()); 
 
             request.put("parameters", parameters);
-            logger.info("Echo request: " + request.toString());
+            logger.trace("Echo request: " + request.toString());
 
             return request.toString();
         }
@@ -29,7 +29,7 @@ public class Echo {
         parameters.put("direction", currentDirection.turnLeft().getValue()); 
 
         request.put("parameters", parameters);
-        logger.info("Echo request: " + request.toString());
+        logger.trace("Echo request: " + request.toString());
 
         return request.toString();
     }
@@ -42,7 +42,7 @@ public class Echo {
         parameters.put("direction", currentDirection.turnRight().getValue()); 
 
         request.put("parameters", parameters);
-        logger.info("Echo request: " + request.toString());
+        logger.trace("Echo request: " + request.toString());
 
         return request.toString();
     }

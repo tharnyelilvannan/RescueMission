@@ -17,7 +17,7 @@ public class Heading {
         parameters.put("direction", currentDirection.getValue());
 
         request.put("parameters", parameters); 
-        logger.info("Heading request:" + request.toString()); 
+        logger.trace("Heading request:" + request.toString()); 
         CurrentLocationTracker tracker = CurrentLocationTracker.get();
 
         tracker.move(lastDirection);

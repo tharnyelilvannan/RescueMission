@@ -10,7 +10,7 @@ public class Stop {
     public String returnToHeadquarters(){
         JSONObject request = new JSONObject();
         request.put("action", "stop");
-        logger.info("Stop request: " + request.toString());
+        logger.trace("Stop request: " + request.toString());
         return request.toString();
 
     }

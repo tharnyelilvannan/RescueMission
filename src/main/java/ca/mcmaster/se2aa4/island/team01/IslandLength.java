@@ -16,7 +16,7 @@ public class IslandLength extends ExploreAbstract {
     private boolean reachedEnd = false;
     private int totalLength = 0;
     private int currentPos = 0;
-    private CurrentLocationTracker currentLocation = CurrentLocationTracker.get();
+    private CurrentLocation currentLocation = CurrentLocation.get();
     private int initialLocation = currentLocation.getYCoordinate();
 
     private enum State {
@@ -48,7 +48,7 @@ public class IslandLength extends ExploreAbstract {
                 prevDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 setInitialDirection = true;
-                logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
+                logger.trace("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
                 return heading.changeHeading(currentDirection, prevDirection);
 
             case ECHO_FORWARD:
@@ -101,10 +101,8 @@ public class IslandLength extends ExploreAbstract {
                     state = State.TURN_NORTH;
                     prevDirection = currentDirection;
                     currentDirection = currentDirection.turnRight();
-                    logger.error("Total length: {}", totalLength);
-                    logger.error(currentLocation.getXCoordinate());
-                    logger.error(currentLocation.getYCoordinate());
-                    logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
+                    logger.trace("Total length: {}", totalLength);
+                    logger.trace("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
                     return heading.changeHeading(currentDirection, prevDirection);
                 }
 
@@ -112,7 +110,7 @@ public class IslandLength extends ExploreAbstract {
                 state = State.RETURN;
                 prevDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
-                logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
+                logger.trace("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
                 return heading.changeHeading(currentDirection, prevDirection);
 
             case RETURN:
@@ -123,7 +121,7 @@ public class IslandLength extends ExploreAbstract {
                     hasFoundLength = true;
                     prevDirection = currentDirection;
                     currentDirection = currentDirection.turnRight();
-                    logger.info("Returning. Direction: {} to {}", prevDirection, currentDirection);
+                    logger.trace("Returning. Direction: {} to {}", prevDirection, currentDirection);
                     return heading.changeHeading(currentDirection, prevDirection);
                 }
 

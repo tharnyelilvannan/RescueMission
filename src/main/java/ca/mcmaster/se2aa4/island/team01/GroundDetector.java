@@ -35,11 +35,11 @@ public class GroundDetector {
 
                 if (extras.has("range")){
                     range = extras.getInt("range");  
-                    logger.info("the range is " + range);
+                    logger.trace("the range is " + range);
                 }
             } 
             else if ("OUT_OF_RANGE".equals(found)) { // If OUT_OF_RANGE
-                logger.info("Ground out of range"); 
+                logger.trace("Ground out of range"); 
                 
             }
         }

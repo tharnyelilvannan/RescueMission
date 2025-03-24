@@ -14,7 +14,7 @@ public class Fly {
         JSONObject request = new JSONObject();
         request.put("action", "fly"); // do fly action
 
-        logger.info("Fly request:" + request.toString()); 
+        logger.trace("Fly request:" + request.toString()); 
 
         tracker.move(direction);
 
