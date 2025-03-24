@@ -59,15 +59,16 @@ public class SearchIsland extends ExploreInterface {
             int range = extras.getInt("range"); 
 
             if (!"GROUND".equals(found)) { // reached the end of the island 
-                if (count >= (islandLength / 2)) { // 15-20 for maps 03, 10, 20 , 10 for map 06
+
+                if (count >= (islandLength / 2)) { 
                     flyUp = true; // start searching in the north direction instead
                     adjustPosition = true;
                     count = 0;  
                 }
 
                 if (range > 9) {
-                    echoedForward = false;
-                    return fly.flyOneUnit(currentDirection); 
+                    // echoedForward = false;
+                    // return fly.flyOneUnit(currentDirection); 
                     // continue searching in the same direction 
                 } else { // if near the edge of map
                     count++; 
