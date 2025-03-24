@@ -1,4 +1,7 @@
 package ca.mcmaster.se2aa4.island.team01;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
 
 public class Drone {
@@ -9,13 +12,15 @@ public class Drone {
     private SearchIsland searchIsland;
     private boolean alignedWithCoastline = false;
     private boolean initalSearchDirectionSet = false;
+    private final Logger logger = LogManager.getLogger();
+
 
     public Drone() {
         findIsland = new FindIsland();
         groundDetector = new GroundDetector();
         stop = new Stop();
-        searchIsland = new SearchIsland(islandLength.getIslandLength());
         islandLength = new IslandLength();
+        searchIsland = new SearchIsland();
     }
     public void updateInfo(ExtraInfo info) {
         if (info != null) {
@@ -32,10 +37,11 @@ public class Drone {
         } else if (findIsland.isLandingPhase() == true && islandLength.hasFoundLength() == false) {
             decision = islandLength.measureIsland();
         } else if (islandLength.hasFoundLength() == true) {
+            int currentLength = islandLength.getIslandLength();
+            searchIsland.updateIslandLength(currentLength);
             decision = searchIsland.explore();
-        } 
-        
-        else {
+
+        } else {
             decision = stop.returnToHeadquarters();
         }
         return decision;

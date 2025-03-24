@@ -29,9 +29,14 @@ public class IslandLength {
     private boolean hasFoundLength = false;
     private int totalLength;
     private CurrentLocation currentLocation = CurrentLocation.get();
+    private int currentPos = 0;
+    private boolean setInitalDirection = false;
+    private boolean reachedEnd = false;
+    private int initialLocation = currentLocation.getYCoordinate();
+
 
     private enum State {
-        ECHO_FORWARD, STOP, TURN_SOUTH, PROCESS_RIGHT_ECHO, PROCESS_LEFT_ECHO, PROCESS_FORWARD_ECHO
+        ECHO_FORWARD, TURN_SOUTH, PROCESS_RIGHT_ECHO, PROCESS_LEFT_ECHO, PROCESS_FORWARD_ECHO, TURN_NORTH, RETURN
     }
 
     private State state = State.TURN_SOUTH;
@@ -60,12 +65,20 @@ public class IslandLength {
                 state = State.ECHO_FORWARD;
                 prevDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
+                setInitalDirection = true;
                 logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
                 return heading.changeHeading(currentDirection, prevDirection); // turn south (initially east)
                 
             case ECHO_FORWARD:
-                state = State.PROCESS_FORWARD_ECHO;
-                return echo.echoStraight(currentDirection); // check front for ground
+                if (setInitalDirection) {
+                    state = State.ECHO_FORWARD;
+                    setInitalDirection = false;
+                    totalLength++;
+                    return fly.flyOneUnit(currentDirection);
+                } else {
+                    state = State.PROCESS_FORWARD_ECHO;
+                    return echo.echoStraight(currentDirection); // check front for ground
+                }
 
             case PROCESS_FORWARD_ECHO:
                 JSONObject extras = information.getExtras();
@@ -77,6 +90,7 @@ public class IslandLength {
                         return echo.echoRightWing(currentDirection);    // echo right if no ground
                     } else {
                         state = State.ECHO_FORWARD;
+                        totalLength++;
                         return fly.flyOneUnit(currentDirection);    // fly forward if ground
                     }
                 }
@@ -97,21 +111,42 @@ public class IslandLength {
                     leftIsGround = "GROUND".equals(leftType);
                 }
         
-                if (leftIsGround || rightIsGround) {
+                if ((leftIsGround || rightIsGround)) {
                     state = State.ECHO_FORWARD;
-                    logger.info("IS THIS EVEN BEING PRINTED OUTSDFS FSFSFSF");
+                    totalLength++;
                     return fly.flyOneUnit(currentDirection);
                 } else {
+                    reachedEnd = true;
+                    state = State.TURN_NORTH;
                     prevDirection = currentDirection;
-                    currentDirection = currentDirection.turnLeft();
-                    hasFoundLength = true;
-                    totalLength = currentLocation.getXCoordinate();
-                    logger.info("Total length is {}", totalLength);
-                    return heading.changeHeading(currentDirection, prevDirection);
+                    currentDirection = currentDirection.turnRight();
+                    logger.info("Total length {}", totalLength);
+                    logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
+                    return heading.changeHeading(currentDirection, prevDirection); // turn west
                 }
 
+            case TURN_NORTH:
+                state = State.RETURN;
+                prevDirection = currentDirection;
+                currentDirection = currentDirection.turnRight();
+                logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
+                return heading.changeHeading(currentDirection, prevDirection); // turn north
+
+            case RETURN:
+                if (currentPos != totalLength) {
+                    state = State.RETURN;
+                    currentPos++;
+                    return fly.flyOneUnit(currentDirection);
+                } else {
+                    hasFoundLength = true;
+                    prevDirection = currentDirection;
+                    currentDirection = currentDirection.turnRight();
+                    logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
+                    return heading.changeHeading(currentDirection, prevDirection); // turn north
+                }
             default:
                 logger.error("Invalid state");
+                totalLength++;
                 return fly.flyOneUnit(currentDirection);
         }
     }

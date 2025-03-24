@@ -23,10 +23,13 @@ public class SearchIsland extends ExploreInterface {
 
     private State state = State.MOVE_EAST;
 
-    public SearchIsland(int islandLength) {
-        super();
-        this.islandLength = islandLength;
-        
+    public SearchIsland() {
+        super();        
+    }
+
+    public void updateIslandLength(int length) {
+        this.islandLength = length;
+        logger.info("SearchIsland updated with length: {}", length);
     }
 
     @Override
@@ -41,7 +44,7 @@ public class SearchIsland extends ExploreInterface {
     @Override
     public String explore() {
         logger.info("** Searching the island **");
-        
+
         if (scanningForCreek) return processScanResults();
         if (keepTurning) return handleStateTransition();
 
@@ -56,7 +59,7 @@ public class SearchIsland extends ExploreInterface {
             int range = extras.getInt("range"); 
 
             if (!"GROUND".equals(found)) { // reached the end of the island 
-                if (count >= 15) { // 15-20 for maps 03, 10, 20 , 10 for map 06
+                if (count >= (islandLength / 2)) { // 15-20 for maps 03, 10, 20 , 10 for map 06
                     flyUp = true; // start searching in the north direction instead
                     adjustPosition = true;
                     count = 0;  
@@ -65,6 +68,7 @@ public class SearchIsland extends ExploreInterface {
                 if (range > 9) {
                     echoedForward = false;
                     return fly.flyOneUnit(currentDirection); 
+                    // continue searching in the same direction 
                 } else { // if near the edge of map
                     count++; 
                     echoedForward = false;
