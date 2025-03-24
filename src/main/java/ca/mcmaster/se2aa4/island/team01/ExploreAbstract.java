@@ -9,7 +9,7 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
 
-public abstract class ExploreInterface {
+public abstract class ExploreAbstract {
     protected final Logger logger = LogManager.getLogger();
     protected Echo echo;
     protected Fly fly;
@@ -18,7 +18,7 @@ public abstract class ExploreInterface {
     protected Stop stop;
     protected Direction currentDirection;
 
-    public ExploreInterface() {
+    public ExploreAbstract() {
         this.echo = new Echo();
         this.fly = new Fly();
         this.heading = new Heading();

@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.island.team01;
 
-public class FindIsland extends ExploreInterface {
+public class FindIsland extends ExploreAbstract {
     private GroundDetector groundDetector;
     private Direction lastDirection;
     
@@ -23,7 +23,7 @@ public class FindIsland extends ExploreInterface {
         updateGroundDetector(info);
     }
 
-    public void updateGroundDetector(ExtraInfo info) {
+    private void updateGroundDetector(ExtraInfo info) {
         if (info != null) {
             groundDetector.updateInfo(info);
         } else {
