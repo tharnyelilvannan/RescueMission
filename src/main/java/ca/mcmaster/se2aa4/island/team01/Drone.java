@@ -14,7 +14,7 @@ public class Drone {
         findIsland = new FindIsland();
         groundDetector = new GroundDetector();
         stop = new Stop();
-        searchIsland = new SearchIsland();
+        searchIsland = new SearchIsland(islandLength.getIslandLength());
         islandLength = new IslandLength();
     }
     public void updateInfo(ExtraInfo info) {
@@ -32,7 +32,7 @@ public class Drone {
         } else if (findIsland.isLandingPhase() == true && islandLength.hasFoundLength() == false) {
             decision = islandLength.measureIsland();
         } else if (islandLength.hasFoundLength() == true) {
-            decision = searchIsland.exploreIsland(islandLength.getIslandLength());
+            decision = searchIsland.explore();
         } 
         
         else {
