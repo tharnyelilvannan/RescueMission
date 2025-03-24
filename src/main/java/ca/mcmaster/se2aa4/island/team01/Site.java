@@ -2,14 +2,14 @@ package ca.mcmaster.se2aa4.island.team01;
 
 public class Site implements Coordinates, ID {
     private static Site instance = null;
-    private static String id;
-    private static int x;
-    private static int y;
+    private String id;
+    private int x;
+    private int y;
 
     private Site() {
     }
 
-    public static Site get() {
+    public static synchronized Site get() {
         if (instance == null) {
             instance = new Site();
         }

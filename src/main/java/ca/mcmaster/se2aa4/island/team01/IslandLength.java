@@ -16,7 +16,7 @@ public class IslandLength extends ExploreInterface {
     private boolean reachedEnd = false;
     private int totalLength = 0;
     private int currentPos = 0;
-    private CurrentLocation currentLocation = CurrentLocation.get();
+    private CurrentLocationTracker currentLocation = CurrentLocationTracker.get();
     private int initialLocation = currentLocation.getYCoordinate();
 
     private enum State {
@@ -101,7 +101,9 @@ public class IslandLength extends ExploreInterface {
                     state = State.TURN_NORTH;
                     prevDirection = currentDirection;
                     currentDirection = currentDirection.turnRight();
-                    logger.info("Total length: {}", totalLength);
+                    logger.error("Total length: {}", totalLength);
+                    logger.error(currentLocation.getXCoordinate());
+                    logger.error(currentLocation.getYCoordinate());
                     logger.info("Current Direction: {} and New Direction: {}", prevDirection, currentDirection);
                     return heading.changeHeading(currentDirection, prevDirection);
                 }

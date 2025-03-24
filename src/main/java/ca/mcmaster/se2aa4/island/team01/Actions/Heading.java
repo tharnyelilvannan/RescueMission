@@ -8,7 +8,6 @@ import ca.mcmaster.se2aa4.island.team01.CurrentLocationTracker;
 
 public class Heading {
     private final Logger logger = LogManager.getLogger();
-    CurrentLocationTracker tracker = new CurrentLocationTracker();
 
     public String changeHeading(Direction currentDirection, Direction lastDirection){
         JSONObject request = new JSONObject();
@@ -19,6 +18,7 @@ public class Heading {
 
         request.put("parameters", parameters); 
         logger.info("Heading request:" + request.toString()); 
+        CurrentLocationTracker tracker = CurrentLocationTracker.get();
 
         tracker.move(lastDirection);
         tracker.move(currentDirection);

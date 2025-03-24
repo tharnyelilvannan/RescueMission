@@ -86,6 +86,7 @@ public class SearchIsland extends ExploreInterface {
     }
 
     private String handleStateTransition() {
+        CurrentLocationTracker tracker = CurrentLocationTracker.get();
         switch (state) {
             case MOVE_EAST:
                 if (flyUp) {
@@ -99,17 +100,25 @@ public class SearchIsland extends ExploreInterface {
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = true;
+                logger.error("\nEAST");
+                logger.error("X: " + tracker.getXCoordinate());
+                logger.error("Y: " + tracker.getYCoordinate());
                 return heading.changeHeading(currentDirection, lastDirection); // turn south 
 
             case TURN_NORTH_FROM_EAST: 
                 if (adjustPosition) { // adjusts the drone's position so that it skips a line
                     adjustPosition = false; 
+                    logger.error("ADJSSTTTTTT");
+                    logger.error(currentDirection);
                     return fly.flyOneUnit(currentDirection);
                 }
                 state = State.TURN_WEST; 
-                currentDirection = currentDirection.turnLeft();
                 lastDirection = currentDirection;
-                keepTurning = false; 
+                currentDirection = currentDirection.turnLeft();
+                keepTurning = false;
+                logger.error("\nNORTH FROM EAST"); 
+                logger.error("X: " + tracker.getXCoordinate());
+                logger.error("Y: " + tracker.getYCoordinate());                
                 return heading.changeHeading(currentDirection, lastDirection); // turn west
             
             case TURN_SOUTH_FROM_EAST:
@@ -117,6 +126,9 @@ public class SearchIsland extends ExploreInterface {
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false; 
+                logger.error("\nSOUTH FROM EAST"); 
+                logger.error("X: " + tracker.getXCoordinate());
+                logger.error("Y: " + tracker.getYCoordinate());       
                 return heading.changeHeading(currentDirection, lastDirection); // turn west
 
             case TURN_WEST:
@@ -125,23 +137,34 @@ public class SearchIsland extends ExploreInterface {
                     lastDirection = currentDirection;
                     currentDirection = currentDirection.turnRight(); 
                     keepTurning = true; 
+                    logger.error("\nWEST FLY UP"); 
+                    logger.error("X: " + tracker.getXCoordinate());
+                    logger.error("Y: " + tracker.getYCoordinate());    
                     return heading.changeHeading(currentDirection, lastDirection); // facing north
                 }
                 state = State.TURN_SOUTH_FROM_WEST;
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = true; 
+                logger.error("\nWEST"); 
+                logger.error("X: " + tracker.getXCoordinate());
+                logger.error("Y: " + tracker.getYCoordinate());       
                 return heading.changeHeading(currentDirection, lastDirection); // facing south
 
             case TURN_NORTH_FROM_WEST:
                 if (adjustPosition) {
                     adjustPosition = false; 
+                    logger.error("ADJUSUTJT");
+                    logger.error(currentDirection);
                     return fly.flyOneUnit(currentDirection);
                 }
                 state = State.MOVE_EAST; 
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
                 keepTurning = false;
+                logger.error("\nNORTH FROM WEST"); 
+                logger.error("X: " + tracker.getXCoordinate());
+                logger.error("Y: " + tracker.getYCoordinate());       
                 return heading.changeHeading(currentDirection, lastDirection); // facing east
             
             case TURN_SOUTH_FROM_WEST:
@@ -149,6 +172,9 @@ public class SearchIsland extends ExploreInterface {
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnLeft();
                 keepTurning = false; 
+                logger.error("\nSOUTH FROM WEST"); 
+                logger.error("X: " + tracker.getXCoordinate());
+                logger.error("Y: " + tracker.getYCoordinate());       
                 return heading.changeHeading(currentDirection, lastDirection); // facing east
 
             default:
@@ -162,9 +188,13 @@ public class SearchIsland extends ExploreInterface {
         JSONObject extras = information.getExtras();
         logger.info(extras);
         CreekList creekList = CreekList.get();
-        CurrentLocation current = CurrentLocation.get();
+        CurrentLocationTracker current = CurrentLocationTracker.get();
 
+        // LITERALLY never runs
         if (!extras.has("creeks")) {
+            logger.error("\nFORWARD"); 
+            logger.error("X: " + current.getXCoordinate());
+            logger.error("Y: " + current.getYCoordinate());  
             logger.info("No creeks found.");
             return fly.flyOneUnit(currentDirection);
         }
@@ -173,7 +203,9 @@ public class SearchIsland extends ExploreInterface {
         JSONArray sites = extras.getJSONArray("sites");
         if (creeks.length() > 0) {
             creekList.addCreek(creeks.getString(0), current.getXCoordinate(), current.getYCoordinate());
-            logger.info("Creek found! ID: " + creeks.getString(0));
+            logger.error("Creek found! ID: " + creeks.getString(0));
+            logger.error(current.getXCoordinate());
+            logger.error(current.getYCoordinate());
         }
 
         if (sites.length() > 0) {
@@ -181,10 +213,12 @@ public class SearchIsland extends ExploreInterface {
             site.setID(sites.getString(0));
             site.setXCoordinate(current.getXCoordinate());
             site.setYCoordinate(current.getYCoordinate());
-            logger.info("Emergency site found! ID: " + sites.getString(0));
+            logger.error("Emergency site found! ID: " + sites.getString(0));
             return stop.returnToHeadquarters();
         }
-
+        logger.error("\nFORWARD 1"); 
+        logger.error("X: " + current.getXCoordinate());
+        logger.error("Y: " + current.getYCoordinate());  
         return fly.flyOneUnit(currentDirection);
     }
 }

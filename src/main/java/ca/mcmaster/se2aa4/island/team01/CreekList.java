@@ -10,7 +10,7 @@ public class CreekList {
 
     }
 
-    public static CreekList get() {
+    public static synchronized CreekList get() {
         if (instance == null) {
             instance = new CreekList();
         }

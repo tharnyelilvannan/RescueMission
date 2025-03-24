@@ -8,7 +8,7 @@ import ca.mcmaster.se2aa4.island.team01.CurrentLocationTracker;
 
 public class Fly {
     private final Logger logger = LogManager.getLogger();
-    CurrentLocationTracker tracker = new CurrentLocationTracker();
+    CurrentLocationTracker tracker = CurrentLocationTracker.get();
 
     public String flyOneUnit(Direction direction){
         JSONObject request = new JSONObject();
@@ -17,6 +17,7 @@ public class Fly {
         logger.info("Fly request:" + request.toString()); 
 
         tracker.move(direction);
+
         return request.toString();
     }
 }

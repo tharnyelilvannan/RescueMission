@@ -17,7 +17,6 @@ public class Explorer implements IExplorerRaid {
     FindIsland findIsland; 
     GetResponse getResponse = new GetResponse();
     Drone drone = new Drone();
-    private int battery;
     CreekCalculator calculator = new CreekCalculator();
 
     @Override
@@ -29,7 +28,6 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
         logger.info("The drone is facing {}", direction);
-        battery = batteryLevel;
         logger.info("Battery level is {}", batteryLevel);
         findIsland = new FindIsland();
         
@@ -51,8 +49,6 @@ public class Explorer implements IExplorerRaid {
         }
         Integer cost = information.getCost();
         logger.info("The cost of the action was {}", cost);
-        battery = battery - cost;
-        logger.info("The battery remaining is {}", battery);
         String status = information.getStatus();
         logger.info("The status of the drone is {}", status);
         JSONObject extraInfo = information.getExtras();
@@ -64,7 +60,7 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String deliverFinalReport() {
         Creek closestCreek = calculator.calculateCreek();
-        logger.info("The closest creek is " + closestCreek.getID());
+        logger.error("The closest creek is " + closestCreek.getID());
         return "Exploration complete.";
     }
 }

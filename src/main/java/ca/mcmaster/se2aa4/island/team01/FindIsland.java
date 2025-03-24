@@ -8,6 +8,9 @@ public class FindIsland extends ExploreInterface {
     private boolean initialSearch;
     private boolean flyPhase;
     private boolean landingPhase;
+    private boolean scanPhase = true;
+    int countX = 0;
+    int countY = 0;
 
     public FindIsland() {
         super();
@@ -34,20 +37,34 @@ public class FindIsland extends ExploreInterface {
     @Override
     public String explore() {
         logger.info("** Making decision");
+        CurrentLocationTracker currentLocation = CurrentLocationTracker.get();
+
+        if (scanPhase) {
+            scanPhase = false;
+            return scan.scanArea();
+        }
 
         if (flyPhase) {
+            scanPhase = true;
             if (initialSearch) {
                 initialSearch = false;
                 lastDirection = currentDirection;
                 currentDirection = currentDirection.turnRight(); // Fly south to start
+                logger.error("Original X: " + currentLocation.getXCoordinate());
+                logger.error("Original Y: " + currentLocation.getYCoordinate());
                 return heading.changeHeading(currentDirection, lastDirection);
             }
-
             if (!groundDetector.isGroundFound() && !flyForward) { // Echo left
                 flyForward = true;
                 return echo.echoLeftWing(currentDirection);
             } else if (!groundDetector.isGroundFound() && flyForward) { // Fly forward
                 flyForward = false;
+                logger.error("Original X: " + currentLocation.getXCoordinate());
+                logger.error("Original Y: " + currentLocation.getYCoordinate());
+                logger.error(currentDirection);
+                logger.error("COUNTX " + countX);
+                logger.error("COUNTY " + countY);
+                countY++;
                 return fly.flyOneUnit(currentDirection);
             } else if (groundDetector.isGroundFound() && currentDirection == Direction.SOUTH) {
                 lastDirection = currentDirection;
@@ -55,6 +72,12 @@ public class FindIsland extends ExploreInterface {
                 return heading.changeHeading(currentDirection, lastDirection);
             } else if (groundDetector.isGroundFound() && groundDetector.getRange() > 0 && flyForward) { // Fly forward
                 flyForward = false;
+                logger.error("Original X: " + currentLocation.getXCoordinate());
+                logger.error("Original Y: " + currentLocation.getYCoordinate());
+                logger.error(currentDirection);
+                logger.error("COUNTX " + countX);
+                logger.error("COUNTY " + countY);
+                countX++;
                 return fly.flyOneUnit(currentDirection);
             } else if (groundDetector.isGroundFound() && groundDetector.getRange() > 0 && !flyForward) { // Echo straight
                 flyForward = true;
@@ -62,6 +85,10 @@ public class FindIsland extends ExploreInterface {
             } else { // Ground reached
                 flyPhase = false;
                 landingPhase = true;
+                logger.error(currentLocation.getXCoordinate());
+                logger.error(currentLocation.getYCoordinate());
+                logger.error("COUNTX " + countX);
+                logger.error("COUNTY " + countY);
                 return scan.scanArea();
             }
         }

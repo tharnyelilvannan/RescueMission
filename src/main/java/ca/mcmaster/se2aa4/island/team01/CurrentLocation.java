@@ -5,10 +5,10 @@ public class CurrentLocation extends Location implements Coordinates {
     private static CurrentLocation instance = null; 
 
     private CurrentLocation() {
-        super(1, 1);
+        super(0, 0);
     }
 
-    public static CurrentLocation get() {
+    public static synchronized CurrentLocation get() {
         if (instance == null) {
             instance = new CurrentLocation();
         }
