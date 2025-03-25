@@ -9,6 +9,12 @@ import ca.mcmaster.se2aa4.island.team01.Actions.Heading;
 import ca.mcmaster.se2aa4.island.team01.Actions.Scan;
 import ca.mcmaster.se2aa4.island.team01.Actions.Stop;
 
+/**
+ * The ExploreAbstract class provides the base explore function for all search algorithm classes.
+ * It encapsulates common class references such as sending commands for echoing, flying, 
+ * heading, scanning, and stopping. It also defines an abstract method `explore` 
+ * that must be implemented by subclasses to carry out their specific search algorithm.
+ */
 public abstract class ExploreAbstract {
     protected final Logger logger = LogManager.getLogger();
     protected Echo echo;
@@ -27,7 +33,15 @@ public abstract class ExploreAbstract {
         this.currentDirection = Direction.EAST;
     }
 
+    /**
+     * Updates exploration classes with extra information.
+     * @param info The response information for the classes.
+     */
     public abstract void updateInfo(ExtraInfo info);
 
+    /**
+     * Defines the specific exploration algorithm to be implemented by subclasses.
+     * @return A string indicating the action request to be taken.
+     */
     public abstract String explore();
 }

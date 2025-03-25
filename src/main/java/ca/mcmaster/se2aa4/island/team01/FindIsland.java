@@ -1,5 +1,10 @@
 package ca.mcmaster.se2aa4.island.team01;
 
+/**
+ * The FindIsland class finds the island from the start posiiton.
+ * It controls the drone's actions for locating the island. 
+ * The class interacts with the GroundDetector to detect the presence of ground and make decisions based on that.
+ */
 public class FindIsland extends ExploreAbstract {
     private GroundDetector groundDetector;
     private Direction lastDirection;
@@ -17,19 +22,26 @@ public class FindIsland extends ExploreAbstract {
         landingPhase = false;
     }
 
+    /**
+     * Updates the GroundDetector with response information provided in ExtraInfo.
+     * @param info The ExtraInfo containing the latest drone status and other parameters.
+     */
     @Override
     public void updateInfo(ExtraInfo info) {
-        updateGroundDetector(info);
-    }
-
-    private void updateGroundDetector(ExtraInfo info) {
         if (info != null) {
             groundDetector.updateInfo(info);
         } else {
             logger.error("Received null ExtraInfo. Skipping ground detector update.");
-        }
+        }    
     }
 
+
+    /**
+     * Controls the exploration process. The drone starts in the fly phase, searching for the island.
+     * It alternates between flying and scanning based on ground detection. 
+     * If the island is found, it transitions to the landing phase.
+     * @return A command string for the drone to execute (e.g., fly, echo, scan).
+     */
     @Override
     public String explore() {
         logger.trace("** Making decision");

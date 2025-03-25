@@ -1,18 +1,20 @@
 package ca.mcmaster.se2aa4.island.team01;
 
-import ca.mcmaster.se2aa4.island.team01.Direction;
-import ca.mcmaster.se2aa4.island.team01.CurrentLocation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
- 
+/**
+ * Singleton class that tracks and updates the current location based on movement in a given direction.
+ */
 public class CurrentLocationTracker {
 
     private static CurrentLocationTracker instance = null;
 
     private CurrentLocationTracker() {
-
+        // Private constructor to prevent instantiation
     }
 
+    /**
+     * Returns the singleton instance of CurrentLocationTracker.
+     * @return The instance of CurrentLocationTracker.
+     */
     public static synchronized CurrentLocationTracker get() {
         if (instance == null) {
             instance = new CurrentLocationTracker();
@@ -20,6 +22,10 @@ public class CurrentLocationTracker {
         return instance;
     }
     
+    /**
+     * Updates the coordinate system based on the performed action.
+     * @param direction The direction to move (NORTH, SOUTH, EAST, WEST).
+     */
     public void move(Direction direction) {
         CurrentLocation currLocation = CurrentLocation.get();
 
@@ -35,6 +41,5 @@ public class CurrentLocationTracker {
         else if (direction == Direction.WEST) {
             currLocation.setXCoordinate(currLocation.getXCoordinate() - 1);
         }
-
     }
 }

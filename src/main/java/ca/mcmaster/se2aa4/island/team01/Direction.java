@@ -1,5 +1,9 @@
 package ca.mcmaster.se2aa4.island.team01;
 
+/**
+ * Enum representing the four cardinal directions (NORTH, SOUTH, EAST, WEST).
+ * Provides methods to turn left, turn right, and retrieve the direction's string value.
+ */
 public enum Direction {
     NORTH("N"), SOUTH("S"), EAST("E"), WEST("W");
 
@@ -7,6 +11,7 @@ public enum Direction {
     private Direction left; 
     private Direction right;
 
+    // Static block to define left and right turns for each direction
     static {
         NORTH.left = WEST;
         NORTH.right = EAST;
@@ -25,13 +30,12 @@ public enum Direction {
     public Direction turnLeft(){
         return left; 
     }
+
     public Direction turnRight(){
         return right;
     }
 
     public String getValue() {
         return val;  
-
     }
 }
-

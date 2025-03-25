@@ -1,5 +1,9 @@
 package ca.mcmaster.se2aa4.island.team01;
-
+/**
+ * The Site class represents a creek on the island with a unique identifier and coordinates (x, y).
+ * It implements the Coordinates interface to provide methods for setting and getting the ID coordinates.
+ * It also implements the ID interface to manage the emergency site ID.
+ */
 public class Site implements Coordinates, ID {
     private static Site instance = null;
     private String id;

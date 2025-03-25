@@ -2,6 +2,11 @@ package ca.mcmaster.se2aa4.island.team01;
 
 import org.json.JSONObject;
 
+/**
+ * The IslandLength class is responsible for measuring the length of the island using a state machine.
+ * The length is determined by how many fly forward actions are made during the exploration.
+ */
+
 public class IslandLength extends ExploreAbstract {
     private ExtraInfo information;
     private FindIsland findIsland;
@@ -23,7 +28,7 @@ public class IslandLength extends ExploreAbstract {
         ECHO_FORWARD, TURN_SOUTH, PROCESS_RIGHT_ECHO, PROCESS_LEFT_ECHO, PROCESS_FORWARD_ECHO, TURN_NORTH, RETURN
     }
 
-    private State state = State.TURN_SOUTH;
+    private State state = State.TURN_SOUTH;     // Initial state
 
     public IslandLength() {
         super();
@@ -40,10 +45,16 @@ public class IslandLength extends ExploreAbstract {
         this.information = info;
     }
 
+    /**
+     * The main exploration method that moves the drone along the island length and processes
+     * ground detection data to determine the island's boundary length.
+     * @return The next action for the drone to execute based on the current state.
+     */
     @Override
     public String explore() {
         switch (state) {
             case TURN_SOUTH:
+                // Turn the drone south to start the exploration
                 state = State.ECHO_FORWARD;
                 prevDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
@@ -52,6 +63,7 @@ public class IslandLength extends ExploreAbstract {
                 return heading.changeHeading(currentDirection, prevDirection);
 
             case ECHO_FORWARD:
+                // Move forward and start the exploration by echoing the surroundings
                 if (setInitialDirection) {
                     setInitialDirection = false;
                     totalLength++;
@@ -62,6 +74,7 @@ public class IslandLength extends ExploreAbstract {
                 }
 
             case PROCESS_FORWARD_ECHO:
+                // Process the echo result after moving forward
                 JSONObject extras = information.getExtras();
                 if (extras.has("found") && extras.has("range")) {
                     forwardType = extras.getString("found");
@@ -77,6 +90,7 @@ public class IslandLength extends ExploreAbstract {
                 break;
 
             case PROCESS_RIGHT_ECHO:
+                // Process the echo from the right wing to detect the ground
                 extras = information.getExtras();
                 if (extras.has("found") && extras.has("range")) {
                     rightType = extras.getString("found");
@@ -86,17 +100,20 @@ public class IslandLength extends ExploreAbstract {
                 return echo.echoLeftWing(currentDirection);
 
             case PROCESS_LEFT_ECHO:
+                // Process the echo from the left wing to detect the ground
                 extras = information.getExtras();
                 if (extras.has("found") && extras.has("range")) {
                     leftType = extras.getString("found");
                     leftIsGround = "GROUND".equals(leftType);
                 }
 
+                // If ground is detected on either side, move forward
                 if (leftIsGround || rightIsGround) {
                     state = State.ECHO_FORWARD;
                     totalLength++;
                     return fly.flyOneUnit(currentDirection);
                 } else {
+                    // If no ground is detected the boundary is reached
                     reachedEnd = true;
                     state = State.TURN_NORTH;
                     prevDirection = currentDirection;
@@ -107,6 +124,7 @@ public class IslandLength extends ExploreAbstract {
                 }
 
             case TURN_NORTH:
+                // Turn the drone north to start returning
                 state = State.RETURN;
                 prevDirection = currentDirection;
                 currentDirection = currentDirection.turnRight();
@@ -114,10 +132,12 @@ public class IslandLength extends ExploreAbstract {
                 return heading.changeHeading(currentDirection, prevDirection);
 
             case RETURN:
+                // Return to the starting point by retracing the steps
                 if (currentPos != totalLength) {
                     currentPos++;
                     return fly.flyOneUnit(currentDirection);
                 } else {
+                    // Once back at the starting point, face east to start island search
                     hasFoundLength = true;
                     prevDirection = currentDirection;
                     currentDirection = currentDirection.turnRight();

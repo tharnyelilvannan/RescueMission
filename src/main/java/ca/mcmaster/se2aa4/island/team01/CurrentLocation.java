@@ -1,13 +1,21 @@
 package ca.mcmaster.se2aa4.island.team01;
 
+/**
+ * Singleton class that represents the current location with X and Y coordinates.
+ * It extends Location and implements the Coordinates interface.
+ */
 public class CurrentLocation extends Location implements Coordinates {
 
-    private static CurrentLocation instance = null; 
+    private static CurrentLocation instance = null; // Singleton instance
 
     private CurrentLocation() {
-        super(0, 0);
+        super(0, 0); // Initialize with default coordinates (0, 0)
     }
 
+    /**
+     * Returns the singleton instance of CurrentLocation.
+     * @return The instance of CurrentLocation.
+     */
     public static synchronized CurrentLocation get() {
         if (instance == null) {
             instance = new CurrentLocation();

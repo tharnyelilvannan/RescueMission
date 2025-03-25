@@ -1,5 +1,10 @@
 package ca.mcmaster.se2aa4.island.team01;
 
+/**
+ * The Creek class represents a creek on the island with a unique identifier and coordinates (x, y).
+ * It implements the Coordinates interface to provide methods for setting and getting the ID coordinates.
+ * It also implements the ID interface to manage the ID for each creek.
+ */
 public class Creek implements Coordinates, ID {
     private String id;
     private int x;
