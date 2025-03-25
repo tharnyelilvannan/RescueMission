@@ -59,6 +59,8 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String deliverFinalReport() {
         Creek closestCreek = calculator.calculateCreek();
+        Site site = Site.get();
+        logger.info("The site is " + site.getID());
         logger.info("The closest creek is " + closestCreek.getID());
         return "Exploration complete.";
     }
