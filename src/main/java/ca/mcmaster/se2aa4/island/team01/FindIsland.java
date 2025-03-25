@@ -7,8 +7,6 @@ public class FindIsland extends ExploreAbstract {
     private boolean initialSearch;
     private boolean flyPhase;
     private boolean landingPhase;
-    int countX = 0;
-    int countY = 0;
 
     public FindIsland() {
         super();
@@ -50,7 +48,6 @@ public class FindIsland extends ExploreAbstract {
                 return echo.echoLeftWing(currentDirection);
             } else if (!groundDetector.isGroundFound() && flyForward) { // Fly forward
                 flyForward = false;
-                countY++;
                 return fly.flyOneUnit(currentDirection);
             } else if (groundDetector.isGroundFound() && currentDirection == Direction.SOUTH) {
                 lastDirection = currentDirection;
@@ -58,7 +55,6 @@ public class FindIsland extends ExploreAbstract {
                 return heading.changeHeading(currentDirection, lastDirection);
             } else if (groundDetector.isGroundFound() && groundDetector.getRange() > 0 && flyForward) { // Fly forward
                 flyForward = false;
-                countX++;
                 return fly.flyOneUnit(currentDirection);
             } else if (groundDetector.isGroundFound() && groundDetector.getRange() > 0 && !flyForward) { // Echo straight
                 flyForward = true;
