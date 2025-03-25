@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
  
 public class CurrentLocationTracker {
 
-    static CurrentLocationTracker instance = null;
+    private static CurrentLocationTracker instance = null;
 
     private CurrentLocationTracker() {
 
