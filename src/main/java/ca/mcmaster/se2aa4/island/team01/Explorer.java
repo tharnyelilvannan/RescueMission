@@ -14,10 +14,10 @@ import eu.ace_design.island.bot.IExplorerRaid;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-    FindIsland findIsland; 
-    GetResponse getResponse = new GetResponse();
-    Drone drone = new Drone();
-    CreekCalculator calculator = new CreekCalculator();
+    private FindIsland findIsland; 
+    private GetResponse getResponse = new GetResponse();
+    private Drone drone = new Drone();
+    private CreekCalculator calculator = new CreekCalculator();
 
     @Override
     public void initialize(String s) {
